@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Compilar prueba módulo Usuario",
+      "label": "Compilar prueba módulo Usuario (creación)",
       "type": "shell",
       "command": "g++",
       "args": [
@@ -22,10 +22,31 @@
         "isDefault": true
       },
       "problemMatcher": ["$gcc"],
-      "detail": "Compila el módulo Usuario y genera test_usuario.exe"
+      "detail": "Compila el módulo Usuario con prueba de creación"
+    },
+    {
+      "label": "Compilar prueba módulo Usuario (guardado)",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-g",
+        "src/usuarios/Usuario.cpp",
+        "src/usuarios/Estudiante.cpp",
+        "src/usuarios/Profesor.cpp",
+        "src/usuarios/Administrador.cpp",
+        "src/usuarios/UsuarioFactory.cpp",
+        "tests/test_usuario_guardado.cpp",
+        "-Iinclude",
+        "-o",
+        "build/test_guardado.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": ["$gcc"],
+      "detail": "Compila el módulo Usuario con prueba de guardado"
     }
   ]
 }
-
-
 

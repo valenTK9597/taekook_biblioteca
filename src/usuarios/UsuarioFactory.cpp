@@ -15,3 +15,67 @@ Usuario* UsuarioFactory::crearUsuario(const std::string& tipo, const std::string
         return nullptr;
     }
 }
+
+#include <fstream>
+#include <sstream>
+
+// Guardar usuario en archivo
+void UsuarioFactory::guardarUsuarioEnArchivo(Usuario* usuario, const std::string& rutaArchivo) {
+    std::ofstream archivo(rutaArchivo, std::ios::app);
+    if (archivo.is_open()) {
+        archivo << usuario->getId() << "|"
+                << usuario->getNombre() << "|"
+                << usuario->getCorreo() << "|"
+                << usuario->getContrasena() << "|"
+                << usuario->getTipo() << "\n";
+        archivo.close();
+    } else {
+        std::cerr << "⚠️ No se pudo abrir el archivo para guardar el usuario.\n";
+    }
+}
+
+// Cargar usuarios desde archivo
+std::vector<Usuario*> UsuarioFactory::cargarUsuariosDesdeArchivo(const std::string& rutaArchivo) {
+    std::vector<Usuario*> usuarios;
+    std::ifstream archivo(rutaArchivo);
+    std::string linea;
+
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string id, nombre, correo, contrasena, tipo;
+
+        std::getline(ss, id, '|');
+        std::getline(ss, nombre, '|');
+        std::getline(ss, correo, '|');
+        std::getline(ss, contrasena, '|');
+        std::getline(ss, tipo, '|');
+
+        Usuario* nuevo = crearUsuario(tipo, id, nombre, correo, contrasena);
+        if (nuevo) usuarios.push_back(nuevo);
+    }
+
+    archivo.close();
+    return usuarios;
+}
+
+// Verificar si correo ya existe
+bool UsuarioFactory::correoExistente(const std::string& correo, const std::string& rutaArchivo) {
+    std::ifstream archivo(rutaArchivo);
+    std::string linea;
+
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string id, nombre, correoLeido;
+
+        std::getline(ss, id, '|');
+        std::getline(ss, nombre, '|');
+        std::getline(ss, correoLeido, '|');
+
+        if (correoLeido == correo) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
