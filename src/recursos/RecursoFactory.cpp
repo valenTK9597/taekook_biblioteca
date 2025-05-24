@@ -65,3 +65,57 @@ std::vector<Recurso*> RecursoFactory::cargarRecursosDesdeArchivo(const std::stri
     archivo.close();
     return recursos;
 }
+
+bool RecursoFactory::idExistente(const std::string& id, const std::string& rutaArchivo) {
+    std::ifstream archivo(rutaArchivo);
+    std::string linea;
+
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string idLeido;
+        std::getline(ss, idLeido, '|');
+
+        if (idLeido == id) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool RecursoFactory::eliminarRecursoPorId(const std::string& id, const std::string& rutaArchivo) {
+    std::ifstream archivoOriginal(rutaArchivo);
+    std::ofstream archivoTemporal("data/temp_recursos.txt");
+    bool eliminado = false;
+    std::string linea;
+
+    if (!archivoOriginal.is_open() || !archivoTemporal.is_open()) {
+        std::cerr << "⚠️ No se pudo abrir uno de los archivos para eliminación.\n";
+        return false;
+    }
+
+    while (std::getline(archivoOriginal, linea)) {
+        std::stringstream ss(linea);
+        std::string idLeido;
+        std::getline(ss, idLeido, '|');
+
+        if (idLeido != id) {
+            archivoTemporal << linea << "\n";
+        } else {
+            eliminado = true;
+        }
+    }
+
+    archivoOriginal.close();
+    archivoTemporal.close();
+
+    if (eliminado) {
+        std::remove(rutaArchivo.c_str());
+        std::rename("data/temp_recursos.txt", rutaArchivo.c_str());
+    } else {
+        std::remove("data/temp_recursos.txt");
+    }
+
+    return eliminado;
+}
+

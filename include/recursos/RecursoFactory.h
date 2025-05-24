@@ -12,6 +12,10 @@ public:
 
     static void guardarRecursoEnArchivo(Recurso* recurso, const std::string& rutaArchivo);
     static std::vector<Recurso*> cargarRecursosDesdeArchivo(const std::string& rutaArchivo);
+
+    static bool idExistente(const std::string& id, const std::string& rutaArchivo);
+    static bool eliminarRecursoPorId(const std::string& id, const std::string& rutaArchivo);
 };
 
 #endif
+
