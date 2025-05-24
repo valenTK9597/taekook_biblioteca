@@ -1,0 +1,2 @@
+L01|Cien años de soledad|Gabriel García Márquez|1967|1|LibroFisico
+E01|Curso de C++|Bjarne Stroustrup|2019|1|Ebook

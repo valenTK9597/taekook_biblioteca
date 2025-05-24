@@ -1,0 +1,17 @@
+#ifndef RECURSOFACTORY_H
+#define RECURSOFACTORY_H
+
+#include "Recurso.h"
+#include <vector>
+
+class RecursoFactory {
+public:
+    static Recurso* crearRecurso(const std::string& tipo, const std::string& id,
+                                  const std::string& titulo, const std::string& autor,
+                                  int anio, bool disponible);
+
+    static void guardarRecursoEnArchivo(Recurso* recurso, const std::string& rutaArchivo);
+    static std::vector<Recurso*> cargarRecursosDesdeArchivo(const std::string& rutaArchivo);
+};
+
+#endif

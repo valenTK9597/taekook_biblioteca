@@ -46,7 +46,31 @@
       },
       "problemMatcher": ["$gcc"],
       "detail": "Compila el módulo Usuario con prueba de guardado"
-    }
+    },
+    {
+  "label": "Compilar prueba módulo Recurso",
+  "type": "shell",
+  "command": "g++",
+  "args": [
+    "-g",
+    "src/recursos/Recurso.cpp",
+    "src/recursos/LibroFisico.cpp",
+    "src/recursos/Ebook.cpp",
+    "src/recursos/Revista.cpp",
+    "src/recursos/Articulo.cpp",
+    "src/recursos/RecursoFactory.cpp",
+    "tests/test_recurso.cpp",
+    "-Iinclude",
+    "-o",
+    "build/test_recurso.exe"
+  ],
+  "group": {
+    "kind": "build",
+    "isDefault": false
+  },
+  "problemMatcher": ["$gcc"],
+  "detail": "Compila el módulo Recurso y su prueba unitaria"
+}
   ]
 }
 
