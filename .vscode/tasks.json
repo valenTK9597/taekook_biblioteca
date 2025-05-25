@@ -70,7 +70,32 @@
   },
   "problemMatcher": ["$gcc"],
   "detail": "Compila el módulo Recurso y su prueba unitaria"
-}
+},
+    {
+      "label": "Compilar prueba módulo Prestamo",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-g",
+        "src/prestamos/Prestamo.cpp",
+        "src/prestamos/PrestamoFactory.cpp",
+        "src/prestamos/EstadoDisponible.cpp",
+        "src/prestamos/EstadoPrestado.cpp",
+        "src/prestamos/EstadoVencido.cpp",
+        "src/prestamos/EstadoDevuelto.cpp",
+        "tests/test_prestamo.cpp",
+        "-Iinclude",
+        "-o",
+        "build/test_prestamo.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": ["$gcc"],
+      "detail": "Compila el módulo Prestamo y su prueba unitaria"
+    }
   ]
 }
+  
 
