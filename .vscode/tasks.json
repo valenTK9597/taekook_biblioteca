@@ -142,6 +142,34 @@
   },
   "problemMatcher": ["$gcc"],
   "detail": "Compila el módulo Notificaciones con su prueba unitaria"
+},
+{
+  "label": "Compilar prueba módulo Recomendaciones",
+  "type": "shell",
+  "command": "g++",
+  "args": [
+    "-g",
+    "src/recomendaciones/RecomendacionPorTipo.cpp",
+    "src/recomendaciones/RecomendacionParaEstudiantes.cpp",
+    "src/recomendaciones/RecomendacionParaProfesores.cpp",
+    "src/recomendaciones/RecomendacionContexto.cpp",
+    "src/recursos/Recurso.cpp",
+    "src/recursos/LibroFisico.cpp",
+    "src/recursos/Ebook.cpp",
+    "src/recursos/Revista.cpp",
+    "src/recursos/Articulo.cpp",
+    "src/recursos/RecursoFactory.cpp",
+    "tests/test_recomendaciones.cpp",
+    "-Iinclude",
+    "-o",
+    "build/test_recomendaciones.exe"
+  ],
+  "group": {
+    "kind": "build",
+    "isDefault": false
+  },
+  "problemMatcher": ["$gcc"],
+  "detail": "Compila el módulo Recomendaciones y su prueba unitaria"
 }
   ]
 }
