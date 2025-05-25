@@ -122,6 +122,26 @@
   },
   "problemMatcher": ["$gcc"],
   "detail": "Compila el módulo Busqueda con sus estrategias y prueba unitaria"
+},
+{
+  "label": "Compilar prueba módulo Notificaciones",
+  "type": "shell",
+  "command": "g++",
+  "args": [
+    "-g",
+    "src/notificaciones/UsuarioObserver.cpp",
+    "src/notificaciones/SistemaNotificaciones.cpp",
+    "tests/test_notificaciones.cpp",
+    "-Iinclude",
+    "-o",
+    "build/test_notificaciones.exe"
+  ],
+  "group": {
+    "kind": "build",
+    "isDefault": false
+  },
+  "problemMatcher": ["$gcc"],
+  "detail": "Compila el módulo Notificaciones con su prueba unitaria"
 }
   ]
 }
