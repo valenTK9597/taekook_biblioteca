@@ -94,7 +94,35 @@
       },
       "problemMatcher": ["$gcc"],
       "detail": "Compila el módulo Prestamo y su prueba unitaria"
-    }
+    },
+    {
+  "label": "Compilar prueba módulo Busqueda",
+  "type": "shell",
+  "command": "g++",
+  "args": [
+    "-g",
+    "src/recursos/Recurso.cpp",
+    "src/recursos/LibroFisico.cpp",
+    "src/recursos/Ebook.cpp",
+    "src/recursos/Revista.cpp",
+    "src/recursos/Articulo.cpp",
+    "src/recursos/RecursoFactory.cpp",
+    "src/busqueda/BusquedaPorTitulo.cpp",
+    "src/busqueda/BusquedaPorAutor.cpp",
+    "src/busqueda/BusquedaPorTipo.cpp",
+    "src/busqueda/BusquedaContexto.cpp",
+    "tests/test_busqueda.cpp",
+    "-Iinclude",
+    "-o",
+    "build/test_busqueda.exe"
+  ],
+  "group": {
+    "kind": "build",
+    "isDefault": false
+  },
+  "problemMatcher": ["$gcc"],
+  "detail": "Compila el módulo Busqueda con sus estrategias y prueba unitaria"
+}
   ]
 }
   
