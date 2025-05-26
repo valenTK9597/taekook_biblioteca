@@ -1,177 +1,255 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Compilar prueba módulo Usuario (creación)",
-      "type": "shell",
-      "command": "g++",
-      "args": [
-        "-g",
-        "src/usuarios/Usuario.cpp",
-        "src/usuarios/Estudiante.cpp",
-        "src/usuarios/Profesor.cpp",
-        "src/usuarios/Administrador.cpp",
-        "src/usuarios/UsuarioFactory.cpp",
-        "tests/test_usuario.cpp",
-        "-Iinclude",
-        "-o",
-        "build/test_usuario.exe"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "problemMatcher": ["$gcc"],
-      "detail": "Compila el módulo Usuario con prueba de creación"
-    },
-    {
-      "label": "Compilar prueba módulo Usuario (guardado)",
-      "type": "shell",
-      "command": "g++",
-      "args": [
-        "-g",
-        "src/usuarios/Usuario.cpp",
-        "src/usuarios/Estudiante.cpp",
-        "src/usuarios/Profesor.cpp",
-        "src/usuarios/Administrador.cpp",
-        "src/usuarios/UsuarioFactory.cpp",
-        "tests/test_usuario_guardado.cpp",
-        "-Iinclude",
-        "-o",
-        "build/test_guardado.exe"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      },
-      "problemMatcher": ["$gcc"],
-      "detail": "Compila el módulo Usuario con prueba de guardado"
-    },
-    {
-  "label": "Compilar prueba módulo Recurso",
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar prueba módulo Usuario (creación)",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "src/usuarios/Usuario.cpp",
+                "src/usuarios/Estudiante.cpp",
+                "src/usuarios/Profesor.cpp",
+                "src/usuarios/Administrador.cpp",
+                "src/usuarios/UsuarioFactory.cpp",
+                "tests/test_usuario.cpp",
+                "-Iinclude",
+                "-o",
+                "build/test_usuario.exe"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Compila el módulo Usuario con prueba de creación"
+        },
+        {
+            "label": "Compilar prueba módulo Usuario (guardado)",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "src/usuarios/Usuario.cpp",
+                "src/usuarios/Estudiante.cpp",
+                "src/usuarios/Profesor.cpp",
+                "src/usuarios/Administrador.cpp",
+                "src/usuarios/UsuarioFactory.cpp",
+                "tests/test_usuario_guardado.cpp",
+                "-Iinclude",
+                "-o",
+                "build/test_guardado.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Compila el módulo Usuario con prueba de guardado"
+        },
+        {
+            "label": "Compilar prueba módulo Recurso",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "src/recursos/Recurso.cpp",
+                "src/recursos/LibroFisico.cpp",
+                "src/recursos/Ebook.cpp",
+                "src/recursos/Revista.cpp",
+                "src/recursos/Articulo.cpp",
+                "src/recursos/RecursoFactory.cpp",
+                "tests/test_recurso.cpp",
+                "-Iinclude",
+                "-o",
+                "build/test_recurso.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Compila el módulo Recurso y su prueba unitaria"
+        },
+        {
+            "label": "Compilar prueba módulo Prestamo",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "src/prestamos/Prestamo.cpp",
+                "src/prestamos/PrestamoFactory.cpp",
+                "src/prestamos/EstadoDisponible.cpp",
+                "src/prestamos/EstadoPrestado.cpp",
+                "src/prestamos/EstadoVencido.cpp",
+                "src/prestamos/EstadoDevuelto.cpp",
+                "tests/test_prestamo.cpp",
+                "-Iinclude",
+                "-o",
+                "build/test_prestamo.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Compila el módulo Prestamo y su prueba unitaria"
+        },
+        {
+            "label": "Compilar prueba módulo Busqueda",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "src/recursos/Recurso.cpp",
+                "src/recursos/LibroFisico.cpp",
+                "src/recursos/Ebook.cpp",
+                "src/recursos/Revista.cpp",
+                "src/recursos/Articulo.cpp",
+                "src/recursos/RecursoFactory.cpp",
+                "src/busqueda/BusquedaPorTitulo.cpp",
+                "src/busqueda/BusquedaPorAutor.cpp",
+                "src/busqueda/BusquedaPorTipo.cpp",
+                "src/busqueda/BusquedaContexto.cpp",
+                "tests/test_busqueda.cpp",
+                "-Iinclude",
+                "-o",
+                "build/test_busqueda.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Compila el módulo Busqueda con sus estrategias y prueba unitaria"
+        },
+        {
+            "label": "Compilar prueba módulo Notificaciones",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "src/notificaciones/UsuarioObserver.cpp",
+                "src/notificaciones/SistemaNotificaciones.cpp",
+                "tests/test_notificaciones.cpp",
+                "-Iinclude",
+                "-o",
+                "build/test_notificaciones.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Compila el módulo Notificaciones con su prueba unitaria"
+        },
+        {
+            "label": "Compilar prueba módulo Recomendaciones",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "src/recomendaciones/RecomendacionPorTipo.cpp",
+                "src/recomendaciones/RecomendacionParaEstudiantes.cpp",
+                "src/recomendaciones/RecomendacionParaProfesores.cpp",
+                "src/recomendaciones/RecomendacionContexto.cpp",
+                "src/recursos/Recurso.cpp",
+                "src/recursos/LibroFisico.cpp",
+                "src/recursos/Ebook.cpp",
+                "src/recursos/Revista.cpp",
+                "src/recursos/Articulo.cpp",
+                "src/recursos/RecursoFactory.cpp",
+                "tests/test_recomendaciones.cpp",
+                "-Iinclude",
+                "-o",
+                "build/test_recomendaciones.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "detail": "Compila el módulo Recomendaciones y su prueba unitaria"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc.exe build active file",
+            "command": "C:/msys64/ucrt64/bin/gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                ""
+            ],
+            "options": {
+                "cwd": "C:/msys64/ucrt64/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Task generated by Debugger."
+        },
+        {
+  "label": "Compilar sistema completo (main.cpp)",
   "type": "shell",
   "command": "g++",
   "args": [
     "-g",
+    "main.cpp",
+    "src/usuarios/Usuario.cpp",
+    "src/usuarios/Estudiante.cpp",
+    "src/usuarios/Profesor.cpp",
+    "src/usuarios/Administrador.cpp",
+    "src/usuarios/UsuarioFactory.cpp",
     "src/recursos/Recurso.cpp",
     "src/recursos/LibroFisico.cpp",
     "src/recursos/Ebook.cpp",
     "src/recursos/Revista.cpp",
     "src/recursos/Articulo.cpp",
     "src/recursos/RecursoFactory.cpp",
-    "tests/test_recurso.cpp",
-    "-Iinclude",
-    "-o",
-    "build/test_recurso.exe"
-  ],
-  "group": {
-    "kind": "build",
-    "isDefault": false
-  },
-  "problemMatcher": ["$gcc"],
-  "detail": "Compila el módulo Recurso y su prueba unitaria"
-},
-    {
-      "label": "Compilar prueba módulo Prestamo",
-      "type": "shell",
-      "command": "g++",
-      "args": [
-        "-g",
-        "src/prestamos/Prestamo.cpp",
-        "src/prestamos/PrestamoFactory.cpp",
-        "src/prestamos/EstadoDisponible.cpp",
-        "src/prestamos/EstadoPrestado.cpp",
-        "src/prestamos/EstadoVencido.cpp",
-        "src/prestamos/EstadoDevuelto.cpp",
-        "tests/test_prestamo.cpp",
-        "-Iinclude",
-        "-o",
-        "build/test_prestamo.exe"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      },
-      "problemMatcher": ["$gcc"],
-      "detail": "Compila el módulo Prestamo y su prueba unitaria"
-    },
-    {
-  "label": "Compilar prueba módulo Busqueda",
-  "type": "shell",
-  "command": "g++",
-  "args": [
-    "-g",
-    "src/recursos/Recurso.cpp",
-    "src/recursos/LibroFisico.cpp",
-    "src/recursos/Ebook.cpp",
-    "src/recursos/Revista.cpp",
-    "src/recursos/Articulo.cpp",
-    "src/recursos/RecursoFactory.cpp",
+    "src/prestamos/Prestamo.cpp",
+    "src/prestamos/PrestamoFactory.cpp",
+    "src/prestamos/EstadoDisponible.cpp",
+    "src/prestamos/EstadoPrestado.cpp",
+    "src/prestamos/EstadoVencido.cpp",
+    "src/prestamos/EstadoDevuelto.cpp",
     "src/busqueda/BusquedaPorTitulo.cpp",
     "src/busqueda/BusquedaPorAutor.cpp",
     "src/busqueda/BusquedaPorTipo.cpp",
     "src/busqueda/BusquedaContexto.cpp",
-    "tests/test_busqueda.cpp",
-    "-Iinclude",
-    "-o",
-    "build/test_busqueda.exe"
-  ],
-  "group": {
-    "kind": "build",
-    "isDefault": false
-  },
-  "problemMatcher": ["$gcc"],
-  "detail": "Compila el módulo Busqueda con sus estrategias y prueba unitaria"
-},
-{
-  "label": "Compilar prueba módulo Notificaciones",
-  "type": "shell",
-  "command": "g++",
-  "args": [
-    "-g",
     "src/notificaciones/UsuarioObserver.cpp",
     "src/notificaciones/SistemaNotificaciones.cpp",
-    "tests/test_notificaciones.cpp",
-    "-Iinclude",
-    "-o",
-    "build/test_notificaciones.exe"
-  ],
-  "group": {
-    "kind": "build",
-    "isDefault": false
-  },
-  "problemMatcher": ["$gcc"],
-  "detail": "Compila el módulo Notificaciones con su prueba unitaria"
-},
-{
-  "label": "Compilar prueba módulo Recomendaciones",
-  "type": "shell",
-  "command": "g++",
-  "args": [
-    "-g",
     "src/recomendaciones/RecomendacionPorTipo.cpp",
     "src/recomendaciones/RecomendacionParaEstudiantes.cpp",
     "src/recomendaciones/RecomendacionParaProfesores.cpp",
     "src/recomendaciones/RecomendacionContexto.cpp",
-    "src/recursos/Recurso.cpp",
-    "src/recursos/LibroFisico.cpp",
-    "src/recursos/Ebook.cpp",
-    "src/recursos/Revista.cpp",
-    "src/recursos/Articulo.cpp",
-    "src/recursos/RecursoFactory.cpp",
-    "tests/test_recomendaciones.cpp",
     "-Iinclude",
     "-o",
-    "build/test_recomendaciones.exe"
+    "build/sistema.exe"
   ],
   "group": {
     "kind": "build",
     "isDefault": false
   },
   "problemMatcher": ["$gcc"],
-  "detail": "Compila el módulo Recomendaciones y su prueba unitaria"
+  "detail": "Compila el main del sistema de biblioteca virtual"
 }
-  ]
+    ]
 }
-  
-
