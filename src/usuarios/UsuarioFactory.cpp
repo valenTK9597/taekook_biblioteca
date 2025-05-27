@@ -18,6 +18,8 @@ Usuario* UsuarioFactory::crearUsuario(const std::string& tipo, const std::string
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <iomanip> // std::quoted
 
 // Guardar usuario en archivo
 void UsuarioFactory::guardarUsuarioEnArchivo(Usuario* usuario, const std::string& rutaArchivo) {
@@ -78,4 +80,19 @@ bool UsuarioFactory::correoExistente(const std::string& correo, const std::strin
 
     return false;
 }
+
+Usuario* UsuarioFactory::obtenerUsuarioPorId(const std::string& id, const std::string& rutaArchivo) {
+    std::ifstream archivo(rutaArchivo);
+    std::string tipo, idArchivo, nombre, correo, contrasena;
+
+    while (archivo >> std::quoted(tipo) >> std::quoted(idArchivo)
+                  >> std::quoted(nombre) >> std::quoted(correo) >> std::quoted(contrasena)) {
+        if (idArchivo == id) {
+            return crearUsuario(tipo, idArchivo, nombre, correo, contrasena);
+        }
+    }
+
+    return nullptr;
+}
+
 

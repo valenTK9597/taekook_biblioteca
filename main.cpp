@@ -12,6 +12,8 @@
 #include "include/usuarios/Administrador.h"
 #include "include/recursos/RecursoFactory.h"
 #include "include/recursos/Recurso.h"
+#include "include/prestamos/PrestamoFactory.h"
+#include "include/prestamos/Prestamo.h"
 
 // Función para cargar usuarios desde archivo
 std::vector<Usuario*> cargarUsuariosDesdeArchivo(const std::string& ruta) {
@@ -167,6 +169,37 @@ Usuario* iniciarSesion(const std::string& rutaUsuarios) {
     return usuarioEncontrado;
 }
 
+void realizarPrestamoInteractivo(const std::string& idUsuario) {
+    std::string idPrestamo, idRecurso, fechaPrestamo, fechaDevolucion;
+
+    std::cout << "\n📋 Solicitud de préstamo\n";
+    std::cout << "ID del préstamo: "; std::cin >> idPrestamo;
+    std::cout << "ID del recurso: "; std::cin >> idRecurso;
+    std::cout << "Fecha de préstamo (YYYY-MM-DD): "; std::cin >> fechaPrestamo;
+    std::cout << "Fecha de devolución (YYYY-MM-DD): "; std::cin >> fechaDevolucion;
+
+    // Validar recurso existente
+    if (!RecursoFactory::idExistente(idRecurso, "data/recursos.txt")) {
+        std::cout << "❌ Recurso no encontrado.\n";
+        return;
+    }
+
+    // Validar préstamo duplicado
+    if (PrestamoFactory::idPrestamoExistente(idPrestamo, "data/prestamos.txt")) {
+        std::cout << "❌ Ya existe un préstamo con ese ID.\n";
+        return;
+    }
+
+    // Crear y guardar el préstamo
+    Prestamo* nuevo = PrestamoFactory::crearPrestamo(
+        idPrestamo, idUsuario, idRecurso, fechaPrestamo, fechaDevolucion, "Prestado"
+    );
+
+    PrestamoFactory::guardarPrestamoEnArchivo(nuevo, "data/prestamos.txt");
+    std::cout << "✅ Préstamo registrado correctamente.\n";
+    delete nuevo;
+}
+
 int main() {
     const std::string rutaUsuarios = "data/usuarios.txt";
     Usuario* usuarioActivo = nullptr;
@@ -180,31 +213,51 @@ int main() {
         int opcion;
         std::cout << "Seleccione una opción: ";
         std::cin >> opcion;
+//++++++++++++++++++++++
+        
+if (opcion == 1) {
+    usuarioActivo = iniciarSesion(rutaUsuarios);
 
-        if (opcion == 1) {
-            usuarioActivo = iniciarSesion(rutaUsuarios);
+    if (!usuarioActivo) {
+    std::cout << "❌ Usuario o contraseña incorrectos.\n";
+    continue;
+}
 
-            if (!usuarioActivo) continue;
+    bool continuarSesion = true;
+    while (continuarSesion) {
+        mostrarMenu(usuarioActivo);
 
-            mostrarMenu(usuarioActivo);
+        int opcionUsuario;
+        std::cout << "\nSeleccione una opción: ";
+        std::cin >> opcionUsuario;
 
-            int opcionUsuario;
-            std::cout << "\nSeleccione una opción del menú: ";
-            std::cin >> opcionUsuario;
-
-            if (usuarioActivo->getTipo() == "Estudiante" || usuarioActivo->getTipo() == "Profesor") {
-                if (opcionUsuario == 1) {
-                    verRecursosDisponibles();
-                }
-            } else if (usuarioActivo->getTipo() == "Administrador") {
-                if (opcionUsuario == 2) {
-                    verRecursosDisponibles(); // Temporal
-                }
+        if (usuarioActivo->getTipo() == "Estudiante" || usuarioActivo->getTipo() == "Profesor") {
+            if (opcionUsuario == 1) {
+                verRecursosDisponibles();
+            } else if (opcionUsuario == 2) {
+                realizarPrestamoInteractivo(usuarioActivo->getId());
+            } else if (opcionUsuario == 5) {
+                std::cout << "👋 Sesión finalizada.\n";
+                continuarSesion = false;
+            } else {
+                std::cout << "⚠️ Opción inválida.\n";
             }
-
-            delete usuarioActivo;
-            usuarioActivo = nullptr;
+        } else if (usuarioActivo->getTipo() == "Administrador") {
+            if (opcionUsuario == 2) {
+                verRecursosDisponibles(); // temporal
+            } else if (opcionUsuario == 5) {
+                std::cout << "👋 Sesión finalizada.\n";
+                continuarSesion = false;
+            } else {
+                std::cout << "⚠️ Opción inválida.\n";
+            }
         }
+    }
+
+    delete usuarioActivo;
+    usuarioActivo = nullptr;
+}
+
 
         else if (opcion == 2) {
             registrarUsuario(rutaUsuarios);

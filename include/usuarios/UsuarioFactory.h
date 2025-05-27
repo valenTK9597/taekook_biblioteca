@@ -13,6 +13,8 @@ public:
     static void guardarUsuarioEnArchivo(Usuario* usuario, const std::string& rutaArchivo);
     static std::vector<Usuario*> cargarUsuariosDesdeArchivo(const std::string& rutaArchivo);
     static bool correoExistente(const std::string& correo, const std::string& rutaArchivo);
+    static Usuario* obtenerUsuarioPorId(const std::string& id, const std::string& rutaArchivo);
+
 };
 
 #endif

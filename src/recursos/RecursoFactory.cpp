@@ -117,5 +117,31 @@ bool RecursoFactory::eliminarRecursoPorId(const std::string& id, const std::stri
     }
 
     return eliminado;
+
 }
+
+Recurso* RecursoFactory::obtenerRecursoPorId(const std::string& id, const std::string& rutaArchivo) {
+    std::ifstream archivo(rutaArchivo);
+    std::string linea;
+
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string tipo, idArchivo, titulo, autor, anio, disponible;
+
+        std::getline(ss, tipo, '|');
+        std::getline(ss, idArchivo, '|');
+        std::getline(ss, titulo, '|');
+        std::getline(ss, autor, '|');
+        std::getline(ss, anio, '|');
+        std::getline(ss, disponible, '|');
+
+        if (idArchivo == id) {
+            bool estaDisponible = (disponible == "1");
+            return crearRecurso(tipo, idArchivo, titulo, autor, std::stoi(anio), estaDisponible);
+        }
+    }
+
+    return nullptr;
+}
+
 
