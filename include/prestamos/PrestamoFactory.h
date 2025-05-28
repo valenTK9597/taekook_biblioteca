@@ -37,7 +37,21 @@ public:
                                                      const std::vector<std::string>& tipos,
                                                      const std::string& rutaPrestamos,
                                                      const std::string& rutaRecursos);
+
+    
+    //Evitar duplicados de préstamos activos del mismo recurso.
+    static bool recursoActualmentePrestado(const std::string& idRecurso, const std::string& rutaArchivo);
+    // Registra una reserva si el recurso ya está prestado
+    static void registrarReserva(const std::string& idUsuario, const std::string& idRecurso);
+        // Muestra las reservas pendientes de un usuario
+    static void mostrarReservasDelUsuario(const std::string& idUsuario);
+
+    // Cancela una reserva (si existe)
+    static void cancelarReserva(const std::string& idUsuario, const std::string& idRecurso);
+
+
 };
 
+    
 #endif
 
