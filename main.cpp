@@ -19,6 +19,8 @@
 #include "include/prestamos/PrestamoFactory.h"
 #include "include/prestamos/Prestamo.h"
 #include "include/prestamos/EstadoDevuelto.h"
+#include "include/prestamos/EstadoVencido.h"
+
 
 // Función para cargar usuarios desde archivo
 std::vector<Usuario*> cargarUsuariosDesdeArchivo(const std::string& ruta) {
@@ -196,6 +198,21 @@ Usuario* iniciarSesion(const std::string& rutaUsuarios) {
     return usuarioEncontrado;
 }
 
+int calcularDiasRetraso(const std::string& fechaLimite, const std::string& fechaActual) {
+    std::tm tmLimite = {}, tmActual = {};
+    std::istringstream ss1(fechaLimite);
+    std::istringstream ss2(fechaActual);
+
+    ss1 >> std::get_time(&tmLimite, "%Y-%m-%d");
+    ss2 >> std::get_time(&tmActual, "%Y-%m-%d");
+
+    std::time_t timeLimite = std::mktime(&tmLimite);
+    std::time_t timeActual = std::mktime(&tmActual);
+
+    double segundos = std::difftime(timeActual, timeLimite);
+    return static_cast<int>(segundos / (60 * 60 * 24));
+}
+
 void realizarPrestamoInteractivo(const std::string& idUsuario) {
     std::string idPrestamo, idRecurso, fechaPrestamo, fechaDevolucion;
 
@@ -235,6 +252,20 @@ void realizarPrestamoInteractivo(const std::string& idUsuario) {
     delete nuevo;
 }
 
+// Función auxiliar para obtener la fecha actual en formato YYYY-MM-DD
+std::string obtenerFechaActual() {
+    time_t t = time(nullptr);
+    tm* now = localtime(&t);
+    char buffer[11];
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d", now);
+    return std::string(buffer);
+}
+
+// Comparación de fechas tipo YYYY-MM-DD
+bool esFechaPosterior(const std::string& actual, const std::string& limite) {
+    return actual > limite;
+}
+
 void devolverPrestamoInteractivo(const std::string& idUsuario) {
     std::string idPrestamo;
     std::cout << "\n🔄 Devolución de recurso\n";
@@ -243,49 +274,37 @@ void devolverPrestamoInteractivo(const std::string& idUsuario) {
 
     std::vector<Prestamo*> prestamos = PrestamoFactory::cargarPrestamosDesdeArchivo("data/prestamos.txt");
     bool encontrado = false;
-
-    // Obtener fecha actual del sistema en formato YYYY-MM-DD
-    auto ahora = std::chrono::system_clock::now();
-    std::time_t tiempoActual = std::chrono::system_clock::to_time_t(ahora);
-    std::tm* fechaActual = std::localtime(&tiempoActual);
-
-    char fechaActualStr[11];
-    std::strftime(fechaActualStr, sizeof(fechaActualStr), "%Y-%m-%d", fechaActual);
-    std::string hoy(fechaActualStr);
+    std::string idRecurso;
+    std::string fechaDevolucion;
+    std::string nuevoEstado;
 
     for (Prestamo* p : prestamos) {
         if (p->getIdPrestamo() == idPrestamo && p->getIdUsuario() == idUsuario) {
-            std::string fechaDevolucion = p->getFechaDevolucion();
+            idRecurso = p->getIdRecurso();
+            fechaDevolucion = p->getFechaDevolucion();
+            std::string fechaActual = obtenerFechaActual();
 
-            // Calcular diferencia en días
-            std::tm fechaLimite = {};
-            std::istringstream ss(fechaDevolucion);
-            ss >> std::get_time(&fechaLimite, "%Y-%m-%d");
-
-            std::time_t tiempoLimite = std::mktime(&fechaLimite);
-            double segundosDiferencia = std::difftime(tiempoActual, tiempoLimite);
-            int diasRetraso = static_cast<int>(segundosDiferencia / (60 * 60 * 24));
-
-            if (diasRetraso > 0) {
-                Recurso* recurso = RecursoFactory::obtenerRecursoPorId(p->getIdRecurso(), "data/recursos.txt");
+           if (esFechaPosterior(fechaActual, fechaDevolucion)) {
+                std::cout << "⚠️ Este préstamo fue devuelto con retraso.\n";
+    
+                // Calcular y mostrar multa
+                Recurso* recurso = RecursoFactory::obtenerRecursoPorId(idRecurso, "data/recursos.txt");
                 if (recurso) {
+                    int diasRetraso = calcularDiasRetraso(fechaDevolucion, fechaActual);
                     double multa = recurso->calcularMulta(diasRetraso);
-                    std::cout << "⚠️ Ha devuelto el recurso con " << diasRetraso
-                              << " días de retraso.\n";
-                    std::cout << "💰 Multa calculada: $" << multa << "\n";
+                    std::cout << "💰 Multa por " << diasRetraso << " días de retraso: $" << multa << "\n";
                     delete recurso;
                 } else {
                     std::cout << "⚠️ No se pudo encontrar el recurso para calcular multa.\n";
                 }
-            } else {
-                std::cout << "✅ Recurso devuelto a tiempo. No hay multa.\n";
-            }
-
-            p->setEstado(new EstadoDevuelto());
-            encontrado = true;
-            break;
-        }
+                    p->setEstado(new EstadoVencido());
+                } else {
+                    p->setEstado(new EstadoDevuelto());
+                }
+        encontrado = true;
+        break;
     }
+}
 
     if (!encontrado) {
         std::cout << "❌ No se encontró el préstamo con ese ID.\n";
@@ -293,7 +312,6 @@ void devolverPrestamoInteractivo(const std::string& idUsuario) {
         return;
     }
 
-    // Reescribir archivo con actualización
     std::ofstream archivo("data/prestamos.txt");
     if (!archivo.is_open()) {
         std::cerr << "❌ Error al actualizar el archivo de préstamos.\n";
@@ -310,10 +328,12 @@ void devolverPrestamoInteractivo(const std::string& idUsuario) {
     }
 
     archivo.close();
-    std::cout << "📥 Registro de devolución actualizado correctamente.\n";
+    std::cout << "✅ Recurso devuelto correctamente.\n";
 
     for (Prestamo* p : prestamos) delete p;
 }
+
+
 
 // Ver préstamos de un usuario
 
@@ -356,6 +376,194 @@ void verReservasPendientes(const std::string& idUsuario) {
         PrestamoFactory::cancelarReserva(idUsuario, idRecursoCancelar);
     }
 }
+
+void cancelarPrestamoPorAdministrador() {
+    std::string idCancelar;
+    std::cout << "\n❌ Cancelar préstamo\n";
+    std::cout << "Ingrese el ID del préstamo a cancelar: ";
+    std::cin >> idCancelar;
+
+    std::ifstream archivoEntrada("data/prestamos.txt");
+    std::ofstream archivoTemporal("data/temp_prestamos.txt");
+    bool encontrado = false;
+    std::string linea;
+
+    while (getline(archivoEntrada, linea)) {
+        std::stringstream ss(linea);
+        std::string id;
+        getline(ss, id, '|');
+
+        if (id != idCancelar) {
+            archivoTemporal << linea << "\n";
+        } else {
+            encontrado = true;
+        }
+    }
+
+    archivoEntrada.close();
+    archivoTemporal.close();
+
+    if (encontrado) {
+        std::remove("data/prestamos.txt");
+        std::rename("data/temp_prestamos.txt", "data/prestamos.txt");
+        std::cout << "✅ Préstamo cancelado exitosamente.\n";
+    } else {
+        std::remove("data/temp_prestamos.txt");
+        std::cout << "❌ No se encontró el préstamo con ese ID.\n";
+    }
+}
+
+void mostrarReportePrestamosEnConsola() {
+    std::vector<Prestamo*> prestamos = PrestamoFactory::cargarPrestamosDesdeArchivo("data/prestamos.txt");
+
+    if (prestamos.empty()) {
+        std::cout << "⚠️ No hay préstamos registrados.\n";
+        return;
+    }
+
+    std::cout << "\n📋 REPORTE GENERAL DE PRÉSTAMOS:\n";
+    std::cout << "--------------------------------------\n";
+
+    for (Prestamo* p : prestamos) {
+        std::cout << "ID Préstamo:     " << p->getIdPrestamo() << "\n";
+        std::cout << "ID Usuario:      " << p->getIdUsuario() << "\n";
+        std::cout << "ID Recurso:      " << p->getIdRecurso() << "\n";
+        std::cout << "Fecha Préstamo:  " << p->getFechaPrestamo() << "\n";
+        std::cout << "Fecha Devolución:" << p->getFechaDevolucion() << "\n";
+        std::cout << "Estado:          " << p->getNombreEstado() << "\n";
+        std::cout << "--------------------------------------\n";
+    }
+
+    for (Prestamo* p : prestamos) delete p;
+}
+
+
+void forzarDevolucionPorAdministrador() {
+    std::string idPrestamo;
+    std::cout << "\n🔐 Forzar devolución\n";
+    std::cout << "Ingrese el ID del préstamo: ";
+    std::cin >> idPrestamo;
+
+    std::vector<Prestamo*> prestamos = PrestamoFactory::cargarPrestamosDesdeArchivo("data/prestamos.txt");
+    bool encontrado = false;
+
+    for (Prestamo* p : prestamos) {
+        if (p->getIdPrestamo() == idPrestamo) {
+            encontrado = true;
+
+            std::cout << "\n📄 Detalle del préstamo:\n";
+            p->mostrarDetalle();
+
+            if (p->getNombreEstado() == "Devuelto") {
+                std::cout << "⚠️ Este préstamo ya está marcado como devuelto.\n";
+                break;
+            }
+
+            std::cout << "\n📨 Se simula el envío de notificación al usuario.\n";
+            std::cout << "¿Deseas confirmar manualmente la devolución?\n";
+            std::cout << "1. Sí, marcar como devuelto\n";
+            std::cout << "2. No, dejar pendiente\n";
+            int decision;
+            std::cin >> decision;
+
+            if (decision == 1) {
+                p->setEstado(new EstadoDevuelto());
+                std::cout << "✅ Préstamo marcado como devuelto exitosamente.\n";
+            } else {
+                std::cout << "🔄 Devolución pendiente. No se han realizado cambios.\n";
+            }
+
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        std::cout << "❌ No se encontró un préstamo con ese ID.\n";
+    }
+
+    // Guardar cambios
+    std::ofstream archivo("data/prestamos.txt");
+    for (Prestamo* p : prestamos) {
+        archivo << p->getIdPrestamo() << "|"
+                << p->getIdUsuario() << "|"
+                << p->getIdRecurso() << "|"
+                << p->getFechaPrestamo() << "|"
+                << p->getFechaDevolucion() << "|"
+                << p->getNombreEstado() << "\n";
+    }
+    archivo.close();
+
+    for (Prestamo* p : prestamos) delete p;
+}
+
+// Función para gestionar préstamos como administrador
+void gestionarPrestamosAdministrador() {
+    bool continuar = true;
+
+    while (continuar) {
+        std::cout << "\n Gestión de préstamos\n";
+        std::cout << "1. Ver todos los préstamos\n";
+        std::cout << "2. Buscar préstamo por ID de usuario\n";
+        std::cout << "3. Buscar préstamo por ID de recurso\n";
+        std::cout << "4. Forzar devolución de préstamo\n";
+        std::cout << "5. Cancelar un préstamo activo\n";
+        std::cout << "6. Ver reporte de préstamos\n";
+        std::cout << "7. Volver al menú principal\n";
+
+
+        int opcion;
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcion;
+
+        std::vector<Prestamo*> prestamos = PrestamoFactory::cargarPrestamosDesdeArchivo("data/prestamos.txt");
+
+        if (opcion == 1) {
+            std::cout << "\n📄 Todos los préstamos registrados:\n";
+            for (Prestamo* p : prestamos) {
+                p->mostrarDetalle();
+            }
+        } else if (opcion == 2) {
+            std::string idUsuario;
+            std::cout << "Ingrese el ID del usuario: ";
+            std::cin >> idUsuario;
+            bool encontrado = false;
+            for (Prestamo* p : prestamos) {
+                if (p->getIdUsuario() == idUsuario) {
+                    p->mostrarDetalle();
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) std::cout << "❌ No se encontraron préstamos para ese usuario.\n";
+        } else if (opcion == 3) {
+            std::string idRecurso;
+            std::cout << "Ingrese el ID del recurso: ";
+            std::cin >> idRecurso;
+            bool encontrado = false;
+            for (Prestamo* p : prestamos) {
+                if (p->getIdRecurso() == idRecurso) {
+                    p->mostrarDetalle();
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) std::cout << "❌ No se encontraron préstamos para ese recurso.\n";
+        } else if (opcion == 4) {
+            forzarDevolucionPorAdministrador();
+        } else if (opcion == 5) {
+            cancelarPrestamoPorAdministrador();
+        } else if (opcion == 6) {
+            mostrarReportePrestamosEnConsola();
+        } else if (opcion == 7) {
+            continuar = false;
+        } else {
+            std::cout << "⚠️ Opcion inválida.\n";
+        }
+
+
+        for (Prestamo* p : prestamos) delete p;
+    }
+}
+
+
 
 int main() {
     const std::string rutaUsuarios = "data/usuarios.txt";
@@ -406,8 +614,14 @@ if (opcion == 1) {
                 std::cout << "⚠️ Opción inválida.\n";
             }
         } else if (usuarioActivo->getTipo() == "Administrador") {
-            if (opcionUsuario == 2) {
-                verRecursosDisponibles(); // temporal
+            if (opcionUsuario == 1) {
+            // Aquí iría gestionarUsuarios(); si lo implementas
+            } else if (opcionUsuario == 2) {
+            // Aquí iría gestionarRecursos(); si lo implementas
+            } else if (opcionUsuario == 3) {
+                gestionarPrestamosAdministrador(); // NUEVA FUNCIÓN
+            } else if (opcionUsuario == 4) {
+                // Aquí iría enviarNotificaciones(); si se implementa
             } else if (opcionUsuario == 5) {
                 std::cout << "👋 Sesión finalizada.\n";
                 continuarSesion = false;

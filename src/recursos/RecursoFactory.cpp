@@ -126,14 +126,13 @@ Recurso* RecursoFactory::obtenerRecursoPorId(const std::string& id, const std::s
 
     while (std::getline(archivo, linea)) {
         std::stringstream ss(linea);
-        std::string tipo, idArchivo, titulo, autor, anio, disponible;
-
-        std::getline(ss, tipo, '|');
+        std::string idArchivo, titulo, autor, anio, disponible, tipo;
         std::getline(ss, idArchivo, '|');
         std::getline(ss, titulo, '|');
         std::getline(ss, autor, '|');
         std::getline(ss, anio, '|');
         std::getline(ss, disponible, '|');
+        std::getline(ss, tipo, '|');
 
         if (idArchivo == id) {
             bool estaDisponible = (disponible == "1");
@@ -143,5 +142,6 @@ Recurso* RecursoFactory::obtenerRecursoPorId(const std::string& id, const std::s
 
     return nullptr;
 }
+
 
 
