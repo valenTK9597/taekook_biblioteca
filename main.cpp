@@ -563,6 +563,327 @@ void gestionarPrestamosAdministrador() {
     }
 }
 
+// Funciones para gestionar usuarios como administrador
+
+void verUsuariosRegistrados(const std::string& ruta) {
+    std::ifstream archivo(ruta);
+    if (!archivo.is_open()) {
+        std::cout << "❌ No se pudo abrir el archivo.\n";
+        return;
+    }
+
+    std::string tipo, id, nombre, correo, contrasena;
+    int contador = 0;
+    while (archivo >> std::quoted(tipo) >> std::quoted(id) >> std::quoted(nombre)
+                   >> std::quoted(correo) >> std::quoted(contrasena)) {
+        std::cout << "---------------------------\n";
+        std::cout << "Tipo: " << tipo << "\n";
+        std::cout << "ID: " << id << "\n";
+        std::cout << "Nombre: " << nombre << "\n";
+        std::cout << "Correo: " << correo << "\n";
+        contador++;
+    }
+
+    if (contador == 0) {
+        std::cout << "⚠️ No hay usuarios registrados.\n";
+    }
+
+    archivo.close();
+}
+
+void eliminarUsuarioPorAdministrador(const std::string& ruta) {
+    std::string idEliminar;
+    std::cout << "\n🗑️ Eliminar usuario\nIngrese el ID del usuario: ";
+    std::cin >> idEliminar;
+
+    std::ifstream archivoOriginal(ruta);
+    std::ofstream archivoTemporal("data/temp_usuarios.txt");
+    bool eliminado = false;
+    std::string tipo, id, nombre, correo, contrasena;
+
+    while (archivoOriginal >> std::quoted(tipo) >> std::quoted(id)
+                           >> std::quoted(nombre) >> std::quoted(correo) >> std::quoted(contrasena)) {
+        if (id != idEliminar) {
+            archivoTemporal << std::quoted(tipo) << " "
+                            << std::quoted(id) << " "
+                            << std::quoted(nombre) << " "
+                            << std::quoted(correo) << " "
+                            << std::quoted(contrasena) << "\n";
+        } else {
+            eliminado = true;
+        }
+    }
+
+    archivoOriginal.close();
+    archivoTemporal.close();
+
+    if (eliminado) {
+        std::remove(ruta.c_str());
+        std::rename("data/temp_usuarios.txt", ruta.c_str());
+        std::cout << "✅ Usuario eliminado correctamente.\n";
+    } else {
+        std::remove("data/temp_usuarios.txt");
+        std::cout << "❌ No se encontró un usuario con ese ID.\n";
+    }
+}
+
+void editarUsuarioPorAdministrador(const std::string& ruta) {
+    std::string idEditar;
+    std::cout << "\n✏️ Editar datos de usuario\nIngrese el ID del usuario: ";
+    std::cin >> idEditar;
+
+    std::ifstream archivoOriginal(ruta);
+    std::ofstream archivoTemporal("data/temp_usuarios.txt");
+    bool editado = false;
+
+    std::string tipo, id, nombre, correo, contrasena;
+
+    while (archivoOriginal >> std::quoted(tipo) >> std::quoted(id)
+                           >> std::quoted(nombre) >> std::quoted(correo) >> std::quoted(contrasena)) {
+        if (id == idEditar) {
+            std::cout << "Nuevo nombre: "; std::cin >> nombre;
+            std::cout << "Nuevo correo: "; std::cin >> correo;
+            std::cout << "Nueva contraseña: "; std::cin >> contrasena;
+            editado = true;
+        }
+
+        archivoTemporal << std::quoted(tipo) << " "
+                        << std::quoted(id) << " "
+                        << std::quoted(nombre) << " "
+                        << std::quoted(correo) << " "
+                        << std::quoted(contrasena) << "\n";
+    }
+
+    archivoOriginal.close();
+    archivoTemporal.close();
+
+    if (editado) {
+        std::remove(ruta.c_str());
+        std::rename("data/temp_usuarios.txt", ruta.c_str());
+        std::cout << "✅ Usuario actualizado exitosamente.\n";
+    } else {
+        std::remove("data/temp_usuarios.txt");
+        std::cout << "❌ No se encontró un usuario con ese ID.\n";
+    }
+}
+
+
+void gestionarUsuariosAdministrador() {
+    bool continuar = true;
+
+    while (continuar) {
+        std::cout << "\n Gestión de usuarios:\n";
+        std::cout << "1. Ver usuarios registrados\n";
+        std::cout << "2. Registrar nuevo usuario\n";
+        std::cout << "3. Eliminar usuario por ID\n";
+        std::cout << "4. Editar datos de usuario\n";
+        std::cout << "5. Volver al menú principal\n";
+
+        int opcion;
+        std::cout << "Seleccione una opción: ";
+        std::cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                verUsuariosRegistrados("data/usuarios.txt");
+                break;
+            case 2:
+                registrarUsuario("data/usuarios.txt");
+                break;
+            case 3:
+                eliminarUsuarioPorAdministrador("data/usuarios.txt");
+                break;
+            case 4:
+                editarUsuarioPorAdministrador("data/usuarios.txt");
+                break;
+            case 5:
+                continuar = false;
+                break;
+            default:
+                std::cout << "⚠️ Opción inválida.\n";
+        }
+    }
+}
+
+void buscarYMostrarRecursos() {
+    std::vector<Recurso*> recursos = RecursoFactory::cargarRecursosDesdeArchivo("data/recursos.txt");
+    std::string criterio;
+    std::cout << "\n🔎 Buscar recurso por título o autor: ";
+    std::cin.ignore(); // limpiar buffer
+    std::getline(std::cin, criterio);
+
+    bool encontrado = false;
+    for (Recurso* r : recursos) {
+        if (r->getTitulo().find(criterio) != std::string::npos || 
+            r->getAutor().find(criterio) != std::string::npos) {
+            r->mostrarInformacion();
+            std::cout << "--------------------------------------\n";
+            encontrado = true;
+        }
+    }
+
+    if (!encontrado) {
+        std::cout << "❌ No se encontraron recursos con ese criterio.\n";
+    }
+
+    for (Recurso* r : recursos) delete r;
+}
+
+// Funciones para gestionar recursos como administrador
+
+void agregarNuevoRecurso() {
+    std::string tipo, id, titulo, autor;
+    int anio;
+    bool disponible = true;
+
+    std::cout << "\n➕ Agregar nuevo recurso\n";
+    std::cout << "Tipo (LibroFisico / Ebook / Articulo / Revista): ";
+    std::cin >> tipo;
+    std::cout << "ID: ";
+    std::cin >> id;
+    std::cout << "Título: ";
+    std::cin.ignore();
+    std::getline(std::cin, titulo);
+    std::cout << "Autor: ";
+    std::getline(std::cin, autor);
+    std::cout << "Año de publicación: ";
+    std::cin >> anio;
+
+    if (RecursoFactory::idExistente(id, "data/recursos.txt")) {
+        std::cout << "❌ Ya existe un recurso con ese ID.\n";
+        return;
+    }
+
+    Recurso* nuevo = RecursoFactory::crearRecurso(tipo, id, titulo, autor, anio, disponible);
+    if (!nuevo) {
+        std::cout << "❌ Tipo de recurso inválido.\n";
+        return;
+    }
+
+    RecursoFactory::guardarRecursoEnArchivo(nuevo, "data/recursos.txt");
+    std::cout << "✅ Recurso agregado correctamente.\n";
+    delete nuevo;
+}
+
+void editarRecursoExistente() {
+    std::string idBuscar;
+    std::cout << "\n✏️ Editar recurso\n";
+    std::cout << "Ingrese el ID del recurso a editar: ";
+    std::cin >> idBuscar;
+
+    std::ifstream archivoEntrada("data/recursos.txt");
+    std::ofstream archivoTemporal("data/temp_recursos.txt");
+
+    if (!archivoEntrada.is_open() || !archivoTemporal.is_open()) {
+        std::cout << "❌ No se pudo abrir los archivos para edición.\n";
+        return;
+    }
+
+    std::string linea;
+    bool encontrado = false;
+
+    while (getline(archivoEntrada, linea)) {
+        std::stringstream ss(linea);
+        std::string id, titulo, autor, anioStr, disponibleStr, tipo;
+        getline(ss, id, '|');
+        getline(ss, titulo, '|');
+        getline(ss, autor, '|');
+        getline(ss, anioStr, '|');
+        getline(ss, disponibleStr, '|');
+        getline(ss, tipo, '|');
+
+        if (id == idBuscar) {
+            encontrado = true;
+            std::string nuevoTitulo, nuevoAutor;
+            int nuevoAnio;
+
+            std::cout << "Nuevo título (actual: " << titulo << "): ";
+            std::cin.ignore();
+            std::getline(std::cin, nuevoTitulo);
+            std::cout << "Nuevo autor (actual: " << autor << "): ";
+            std::getline(std::cin, nuevoAutor);
+            std::cout << "Nuevo año (actual: " << anioStr << "): ";
+            std::cin >> nuevoAnio;
+
+            archivoTemporal << id << "|"
+                            << nuevoTitulo << "|"
+                            << nuevoAutor << "|"
+                            << nuevoAnio << "|"
+                            << disponibleStr << "|"
+                            << tipo << "\n";
+        } else {
+            archivoTemporal << linea << "\n";
+        }
+    }
+
+    archivoEntrada.close();
+    archivoTemporal.close();
+
+    if (encontrado) {
+        std::remove("data/recursos.txt");
+        std::rename("data/temp_recursos.txt", "data/recursos.txt");
+        std::cout << "✅ Recurso editado correctamente.\n";
+    } else {
+        std::remove("data/temp_recursos.txt");
+        std::cout << "❌ No se encontró el recurso con ese ID.\n";
+    }
+}
+
+
+void gestionarRecursosAdministrador() {
+    bool continuar = true;
+
+    while (continuar) {
+        std::cout << "\n📘 Gestión de Recursos\n";
+        std::cout << "1. Ver todos los recursos\n";
+        std::cout << "2. Buscar recurso por título o autor\n";
+        std::cout << "3. Eliminar recurso por ID\n";
+        std::cout << "4. Agregar nuevo recurso\n";
+        std::cout << "5. Editar recurso existente\n";
+        std::cout << "6. Volver al menú principal\n";
+        std::cout << "Seleccione una opción: ";
+        int opcion;
+        std::cin >> opcion;
+
+        if (opcion == 1) {
+            std::vector<Recurso*> recursos = RecursoFactory::cargarRecursosDesdeArchivo("data/recursos.txt");
+            if (recursos.empty()) {
+                std::cout << "⚠️ No hay recursos cargados.\n";
+            } else {
+                std::cout << "\n📚 LISTADO COMPLETO DE RECURSOS:\n";
+                for (Recurso* r : recursos) {
+                    r->mostrarInformacion();
+                    std::cout << "--------------------------------------\n";
+                }
+            }
+            for (Recurso* r : recursos) delete r;
+
+        } else if (opcion == 2) {
+            buscarYMostrarRecursos(); // Ya definida antes
+
+        } else if (opcion == 3) {
+            std::string idEliminar;
+            std::cout << "Ingrese el ID del recurso que desea eliminar: ";
+            std::cin >> idEliminar;
+
+            bool exito = RecursoFactory::eliminarRecursoPorId(idEliminar, "data/recursos.txt");
+            if (exito)
+                std::cout << "✅ Recurso eliminado correctamente.\n";
+            else
+                std::cout << "❌ No se encontró el recurso con ese ID.\n";
+
+        } else if (opcion == 4) {
+            agregarNuevoRecurso();
+        } else if (opcion == 5) {
+            editarRecursoExistente();
+        } else if (opcion == 6) {
+            continuar = false;
+        } else {
+            std::cout << "⚠️ Opción inválida.\n";
+        }
+    }
+}
+
 
 
 int main() {
@@ -615,9 +936,9 @@ if (opcion == 1) {
             }
         } else if (usuarioActivo->getTipo() == "Administrador") {
             if (opcionUsuario == 1) {
-            // Aquí iría gestionarUsuarios(); si lo implementas
+                gestionarUsuariosAdministrador();
             } else if (opcionUsuario == 2) {
-            // Aquí iría gestionarRecursos(); si lo implementas
+                gestionarRecursosAdministrador();
             } else if (opcionUsuario == 3) {
                 gestionarPrestamosAdministrador(); // NUEVA FUNCIÓN
             } else if (opcionUsuario == 4) {
