@@ -149,15 +149,17 @@ void ModuloUsuarios::editarPerfilUsuario(Usuario* usuario) {
 void ModuloUsuarios::verUsuariosRegistrados() {
     std::ifstream archivo(rutaArchivoUsuarios);
     if (!archivo.is_open()) {
-        std::cout << "❌ No se pudo abrir el archivo.\n";
+        std::cout << " No se pudo abrir el archivo.\n";
         return;
     }
 
-    std::string tipo, id, nombre, correo, contrasena;
-    int contador = 0;
     std::string linea;
-        while (std::getline(archivo, linea)) {
+    int contador = 0;
+
+    while (std::getline(archivo, linea)) {
         std::stringstream ss(linea);
+        std::string id, nombre, correo, contrasena, tipo;
+
         std::getline(ss, id, '|');
         std::getline(ss, nombre, '|');
         std::getline(ss, correo, '|');
@@ -165,15 +167,15 @@ void ModuloUsuarios::verUsuariosRegistrados() {
         std::getline(ss, tipo, '|');
 
         std::cout << "---------------------------\n";
+        std::cout << "Tipo: " << tipo << "\n";
         std::cout << "ID: " << id << "\n";
         std::cout << "Nombre: " << nombre << "\n";
         std::cout << "Correo: " << correo << "\n";
-        std::cout << "Tipo: " << tipo << "\n";
         contador++;
     }
 
     if (contador == 0) {
-        std::cout << "⚠️ No hay usuarios registrados.\n";
+        std::cout << " No hay usuarios registrados.\n";
     }
 
     archivo.close();
@@ -188,16 +190,24 @@ void ModuloUsuarios::eliminarUsuarioPorId() {
     std::ifstream archivoOriginal(rutaArchivoUsuarios);
     std::ofstream archivoTemporal("data/temp_usuarios.txt");
     bool eliminado = false;
-    std::string tipo, id, nombre, correo, contrasena;
 
-    while (archivoOriginal >> std::quoted(tipo) >> std::quoted(id)
-                           >> std::quoted(nombre) >> std::quoted(correo) >> std::quoted(contrasena)) {
+    std::string linea;
+    while (std::getline(archivoOriginal, linea)) {
+        std::stringstream ss(linea);
+        std::string id, nombre, correo, contrasena, tipo;
+
+        std::getline(ss, id, '|');
+        std::getline(ss, nombre, '|');
+        std::getline(ss, correo, '|');
+        std::getline(ss, contrasena, '|');
+        std::getline(ss, tipo, '|');
+
         if (id != idEliminar) {
-            archivoTemporal << std::quoted(tipo) << " "
-                            << std::quoted(id) << " "
-                            << std::quoted(nombre) << " "
-                            << std::quoted(correo) << " "
-                            << std::quoted(contrasena) << "\n";
+            archivoTemporal << id << "|"
+                            << nombre << "|"
+                            << correo << "|"
+                            << contrasena << "|"
+                            << tipo << "\n";
         } else {
             eliminado = true;
         }
@@ -209,27 +219,35 @@ void ModuloUsuarios::eliminarUsuarioPorId() {
     if (eliminado) {
         std::remove(rutaArchivoUsuarios.c_str());
         std::rename("data/temp_usuarios.txt", rutaArchivoUsuarios.c_str());
-        std::cout << "✅ Usuario eliminado correctamente.\n";
+        std::cout << " Usuario eliminado correctamente.\n";
     } else {
         std::remove("data/temp_usuarios.txt");
-        std::cout << "❌ No se encontro un usuario con ese ID.\n";
+        std::cout << " No se encontro un usuario con ese ID.\n";
     }
 }
+
 
 // Editar usuario
 void ModuloUsuarios::editarUsuarioPorId() {
     std::string idEditar;
-    std::cout << "\n✏️ Editar datos de usuario\nIngrese el ID del usuario: ";
+    std::cout << "\n Editar datos de usuario\nIngrese el ID del usuario: ";
     std::cin >> idEditar;
 
     std::ifstream archivoOriginal(rutaArchivoUsuarios);
     std::ofstream archivoTemporal("data/temp_usuarios.txt");
     bool editado = false;
 
-    std::string tipo, id, nombre, correo, contrasena;
+    std::string linea;
+    while (std::getline(archivoOriginal, linea)) {
+        std::stringstream ss(linea);
+        std::string id, nombre, correo, contrasena, tipo;
 
-    while (archivoOriginal >> std::quoted(tipo) >> std::quoted(id)
-                           >> std::quoted(nombre) >> std::quoted(correo) >> std::quoted(contrasena)) {
+        std::getline(ss, id, '|');
+        std::getline(ss, nombre, '|');
+        std::getline(ss, correo, '|');
+        std::getline(ss, contrasena, '|');
+        std::getline(ss, tipo, '|');
+
         if (id == idEditar) {
             std::cout << "Nuevo nombre: "; std::cin >> nombre;
             std::cout << "Nuevo correo: "; std::cin >> correo;
@@ -237,11 +255,11 @@ void ModuloUsuarios::editarUsuarioPorId() {
             editado = true;
         }
 
-        archivoTemporal << std::quoted(tipo) << " "
-                        << std::quoted(id) << " "
-                        << std::quoted(nombre) << " "
-                        << std::quoted(correo) << " "
-                        << std::quoted(contrasena) << "\n";
+        archivoTemporal << id << "|"
+                        << nombre << "|"
+                        << correo << "|"
+                        << contrasena << "|"
+                        << tipo << "\n";
     }
 
     archivoOriginal.close();
@@ -250,12 +268,13 @@ void ModuloUsuarios::editarUsuarioPorId() {
     if (editado) {
         std::remove(rutaArchivoUsuarios.c_str());
         std::rename("data/temp_usuarios.txt", rutaArchivoUsuarios.c_str());
-        std::cout << "✅ Usuario actualizado exitosamente.\n";
+        std::cout << " Usuario actualizado exitosamente.\n";
     } else {
         std::remove("data/temp_usuarios.txt");
-        std::cout << "❌ No se encontro un usuario con ese ID.\n";
+        std::cout << " No se encontro un usuario con ese ID.\n";
     }
 }
+
 
 // Menú principal para administrar usuarios
 void ModuloUsuarios::gestionarUsuariosAdministrador() {

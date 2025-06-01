@@ -1,3 +1,3 @@
 021|Patricia|patricia@gmail.com|patricia|Estudiante
 022|Jeon Jungkook|jjk@gmail.com|jk|Administrador
-033|Valentina|valen@gmail.com|valen|Estudiante
+025|Carlos|carlosxd@gmail.com|carlos|Profesor
