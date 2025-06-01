@@ -3,10 +3,15 @@
 #include "include/usuarios/ModuloUsuarios.h"
 #include "include/usuarios/UsuarioFactory.h"
 #include "include/usuarios/Usuario.h"
+#include "include/usuarios/ModuloUsuarios.h"
+#include "include/recursos/ModuloRecursos.h"
+#include "include/recursos/RecursoFactory.h"
+
 
 
 int main() {
     ModuloUsuarios moduloUsuarios("data/usuarios.txt");
+    ModuloRecursos moduloRecursos("data/recursos.txt");
 
     Usuario* usuarioActivo = nullptr;
 
@@ -36,7 +41,10 @@ int main() {
                 // Menú según tipo
                 if (usuarioActivo->getTipo() == "Estudiante" || usuarioActivo->getTipo() == "Profesor") {
                     std::cout << "1. Editar perfil\n";
-                    std::cout << "2. Cerrar sesion\n";
+                    std::cout << "2. Ver recursos disponibles\n";
+                    std::cout << "3. Buscar recurso por título\n";
+                    std::cout << "4. Buscar recurso por autor\n";
+                    std::cout << "5. Cerrar sesión\n";
 
                     int subopcion;
                     std::cout << "Seleccione una opcion: ";
@@ -45,6 +53,12 @@ int main() {
                     if (subopcion == 1) {
                         moduloUsuarios.editarPerfilUsuario(usuarioActivo);
                     } else if (subopcion == 2) {
+                        moduloRecursos.verRecursosDisponibles();
+                    } else if (subopcion == 3) {
+                        moduloRecursos.buscarPorTitulo();
+                    } else if (subopcion == 4) {
+                        moduloRecursos.buscarPorAutor();
+                    } else if (subopcion == 5) {
                         std::cout << " Sesion cerrada.\n";
                         enSesion = false;
                     } else {
@@ -54,7 +68,8 @@ int main() {
                 } else if (usuarioActivo->getTipo() == "Administrador") {
                     std::cout << "1. Editar perfil\n";
                     std::cout << "2. Gestionar usuarios\n";
-                    std::cout << "3. Cerrar sesion\n";
+                    std::cout << "3. Gestionar recursos\n";
+                    std::cout << "4. Cerrar sesion\n";
 
                     int subopcion;
                     std::cout << "Seleccione una opcion: ";
@@ -65,11 +80,14 @@ int main() {
                     } else if (subopcion == 2) {
                         moduloUsuarios.gestionarUsuariosAdministrador();
                     } else if (subopcion == 3) {
+                        moduloRecursos.gestionarRecursosAdministrador();
+                    } else if (subopcion == 4) {
                         std::cout << "👋 Sesion cerrada.\n";
                         enSesion = false;
                     } else {
                         std::cout << "⚠️ Opcion invalida.\n";
                     }
+
                 }
             }
 

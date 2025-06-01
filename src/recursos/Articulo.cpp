@@ -4,7 +4,7 @@ Articulo::Articulo(std::string id, std::string titulo, std::string autor, int an
     : Recurso(id, titulo, autor, anio, disponible) {}
 
 void Articulo::registrar() const {
-    std::cout << "📄 Artículo registrado: " << titulo << std::endl;
+    std::cout << "📄 Articulo registrado: " << titulo << std::endl;
 }
 
 double Articulo::calcularMulta(int diasRetraso) const {
@@ -16,10 +16,10 @@ std::string Articulo::getTipo() const {
 }
 
 void Articulo::mostrarInformacion() const {
-    std::cout << " - Artículo:" << std::endl;
+    std::cout << " - Articulo:" << std::endl;
     std::cout << " - ID: " << id << std::endl;
-    std::cout << " - Título: " << titulo << std::endl;
+    std::cout << " - Titulo: " << titulo << std::endl;
     std::cout << " - Autor: " << autor << std::endl;
-    std::cout << " - Año: " << anioPublicacion << std::endl;
+    std::cout << " - Anio: " << anioPublicacion << std::endl;
     std::cout << " - Disponible: " << (disponible ? "Sí" : "No") << std::endl;
 }

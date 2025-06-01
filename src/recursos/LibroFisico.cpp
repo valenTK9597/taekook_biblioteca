@@ -4,7 +4,7 @@ LibroFisico::LibroFisico(std::string id, std::string titulo, std::string autor, 
     : Recurso(id, titulo, autor, anio, disponible) {}
 
 void LibroFisico::registrar() const {
-    std::cout << "Libro físico registrado: " << titulo << std::endl;
+    std::cout << "Libro fisico registrado: " << titulo << std::endl;
 }
 
 double LibroFisico::calcularMulta(int diasRetraso) const {
@@ -16,10 +16,10 @@ std::string LibroFisico::getTipo() const {
 }
 
 void LibroFisico::mostrarInformacion() const {
-    std::cout << " - Libro Físico:" << std::endl;
+    std::cout << " - Libro Fisico:" << std::endl;
     std::cout << " - ID: " << id << std::endl;
-    std::cout << " - Título: " << titulo << std::endl;
+    std::cout << " - Titulo: " << titulo << std::endl;
     std::cout << " - Autor: " << autor << std::endl;
-    std::cout << " - Año: " << anioPublicacion << std::endl;
+    std::cout << " - Anio: " << anioPublicacion << std::endl;
     std::cout << " - Disponible: " << (disponible ? "Sí" : "No") << std::endl;
 }

@@ -18,8 +18,8 @@ std::string Ebook::getTipo() const {
 void Ebook::mostrarInformacion() const {
     std::cout << " - Ebook:" << std::endl;
     std::cout << " - ID: " << id << std::endl;
-    std::cout << " - Título: " << titulo << std::endl;
+    std::cout << " - Titulo: " << titulo << std::endl;
     std::cout << " - Autor: " << autor << std::endl;
-    std::cout << " - Año: " << anioPublicacion << std::endl;
-    std::cout << " - Disponible: " << (disponible ? "Sí" : "No") << std::endl;
+    std::cout << " - Anio: " << anioPublicacion << std::endl;
+    std::cout << " - Disponible: " << (disponible ? "Si" : "No") << std::endl;
 }

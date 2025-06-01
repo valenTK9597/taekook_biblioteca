@@ -90,7 +90,7 @@ bool RecursoFactory::eliminarRecursoPorId(const std::string& id, const std::stri
     std::string linea;
 
     if (!archivoOriginal.is_open() || !archivoTemporal.is_open()) {
-        std::cerr << "⚠️ No se pudo abrir uno de los archivos para eliminación.\n";
+        std::cerr << "⚠️ No se pudo abrir uno de los archivos para eliminacion.\n";
         return false;
     }
 

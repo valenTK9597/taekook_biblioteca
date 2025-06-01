@@ -4,7 +4,7 @@ Revista::Revista(std::string id, std::string titulo, std::string autor, int anio
     : Recurso(id, titulo, autor, anio, disponible) {}
 
 void Revista::registrar() const {
-    std::cout << "📰 Revista registrada: " << titulo << std::endl;
+    std::cout << " Revista registrada: " << titulo << std::endl;
 }
 
 double Revista::calcularMulta(int diasRetraso) const {
@@ -16,10 +16,10 @@ std::string Revista::getTipo() const {
 }
 
 void Revista::mostrarInformacion() const {
-    std::cout << "📰 Revista:" << std::endl;
+    std::cout << "   Revista:" << std::endl;
     std::cout << " - ID: " << id << std::endl;
-    std::cout << " - Título: " << titulo << std::endl;
+    std::cout << " - Titulo: " << titulo << std::endl;
     std::cout << " - Autor: " << autor << std::endl;
-    std::cout << " - Año: " << anioPublicacion << std::endl;
+    std::cout << " - Anio: " << anioPublicacion << std::endl;
     std::cout << " - Disponible: " << (disponible ? "Sí" : "No") << std::endl;
 }

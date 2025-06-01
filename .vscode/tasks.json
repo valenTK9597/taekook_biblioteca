@@ -213,6 +213,7 @@
   "args": [
     "-g",
     "main.cpp",
+    "src/recursos/ModuloRecursos.cpp",
     "src/usuarios/ModuloUsuarios.cpp",
     "src/usuarios/Usuario.cpp",
     "src/usuarios/Estudiante.cpp",
