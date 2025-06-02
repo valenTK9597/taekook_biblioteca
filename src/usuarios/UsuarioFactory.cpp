@@ -2,6 +2,7 @@
 #include "../../include/usuarios/Estudiante.h"
 #include "../../include/usuarios/Profesor.h"
 #include "../../include/usuarios/Administrador.h"
+#include <algorithm> 
 
 Usuario* UsuarioFactory::crearUsuario(const std::string& tipo, const std::string& id, const std::string& nombre,
                                       const std::string& correo, const std::string& contrasena) {
@@ -83,11 +84,24 @@ bool UsuarioFactory::correoExistente(const std::string& correo, const std::strin
 
 Usuario* UsuarioFactory::obtenerUsuarioPorId(const std::string& id, const std::string& rutaArchivo) {
     std::ifstream archivo(rutaArchivo);
-    std::string tipo, idArchivo, nombre, correo, contrasena;
+    std::string linea;
 
-    while (archivo >> std::quoted(tipo) >> std::quoted(idArchivo)
-                  >> std::quoted(nombre) >> std::quoted(correo) >> std::quoted(contrasena)) {
-        if (idArchivo == id) {
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string idArchivo, nombre, correo, contrasena, tipo;
+
+        std::getline(ss, idArchivo, '|');
+        std::getline(ss, nombre, '|');
+        std::getline(ss, correo, '|');
+        std::getline(ss, contrasena, '|');
+        std::getline(ss, tipo, '|');
+
+        // Limpieza de espacios por si los hay
+        idArchivo.erase(std::remove_if(idArchivo.begin(), idArchivo.end(), ::isspace), idArchivo.end());
+        std::string idBuscado = id;
+        idBuscado.erase(std::remove_if(idBuscado.begin(), idBuscado.end(), ::isspace), idBuscado.end());
+
+        if (idArchivo == idBuscado) {
             return crearUsuario(tipo, idArchivo, nombre, correo, contrasena);
         }
     }

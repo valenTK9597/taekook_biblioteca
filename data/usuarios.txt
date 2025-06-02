@@ -1,3 +1,5 @@
 021|Patricia|patricia@gmail.com|patricia|Estudiante
 022|Jeon Jungkook|jjk@gmail.com|jk|Administrador
 099|Luisa|luisa@gmail.com|luisa|Profesor
+301|Elena|elena@gmail.com|1234|Estudiante
+401|Carlos|carlos@uni.edu|prof123|Profesor
