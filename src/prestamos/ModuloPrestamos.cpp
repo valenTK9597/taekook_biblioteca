@@ -310,6 +310,7 @@ void ModuloPrestamos::forzarDevolucionPorId() {
     std::ofstream salida("data/temp_prestamos.txt");
     std::string linea;
     bool modificado = false;
+    std::string ridPrestado;  // guardamos el ID del recurso afectado
 
     while (getline(entrada, linea)) {
         std::stringstream ss(linea);
@@ -342,9 +343,9 @@ void ModuloPrestamos::forzarDevolucionPorId() {
                 std::cout << " Prestamo aún en fecha, marcado como devuelto.\n";
             }
 
+            ridPrestado = rid;  // guardar para actualizar recurso
             modificado = true;
         }
-
 
         salida << idL << "|" << uid << "|" << rid << "|"
                << fInicio << "|" << fFin << "|" << estado << "\n";
@@ -358,6 +359,24 @@ void ModuloPrestamos::forzarDevolucionPorId() {
 
     if (modificado) {
         std::cout << " Devolucion forzada con exito.\n";
+
+        // 🔁 Actualizar disponibilidad en recursos.txt
+        std::vector<Recurso*> recursos = RecursoFactory::cargarRecursosDesdeArchivo(rutaArchivoRecursos);
+        std::ofstream archivoTemp("data/temp_recursos.txt");
+
+        for (Recurso* r : recursos) {
+            if (r->getId() == ridPrestado) {
+                r->setDisponible(true);
+            }
+            archivoTemp << r->getId() << "|" << r->getTitulo() << "|" << r->getAutor() << "|"
+                        << r->getAnioPublicacion() << "|" << r->estaDisponible() << "|"
+                        << r->getTipo() << "\n";
+            delete r;
+        }
+
+        archivoTemp.close();
+        std::remove(rutaArchivoRecursos.c_str());
+        std::rename("data/temp_recursos.txt", rutaArchivoRecursos.c_str());
     } else {
         std::cout << " No se pudo modificar. Verifica el estado del prestamo.\n";
     }

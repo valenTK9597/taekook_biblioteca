@@ -1,0 +1,5 @@
+ID | Usuario | Recurso | Fecha prestamo | Fecha devolucion | Estado
+-------------------------------------------------------------------
+0235	021	L01	2025-06-02	2025-06-01	Vencido
+0123	021	L01	2025-06-02	2025-07-2	Prestado
+P002	401	L02	2025-06-02	2025-06-10	Devuelto
