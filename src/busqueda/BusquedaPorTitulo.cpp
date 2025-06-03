@@ -1,12 +1,28 @@
 #include "../../include/busqueda/BusquedaPorTitulo.h"
 #include <algorithm>
 
+static std::string normalizar(const std::string& texto) {
+    std::string limpio = texto;
+    std::transform(limpio.begin(), limpio.end(), limpio.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+
+    size_t inicio = limpio.find_first_not_of(" \t\n\r");
+    size_t fin = limpio.find_last_not_of(" \t\n\r");
+    if (inicio != std::string::npos && fin != std::string::npos)
+        limpio = limpio.substr(inicio, fin - inicio + 1);
+    else
+        limpio = "";
+
+    return limpio;
+}
+
 std::vector<Recurso*> BusquedaPorTitulo::buscar(const std::vector<Recurso*>& recursos, const std::string& criterio) const {
     std::vector<Recurso*> resultados;
+    std::string criterioNormalizado = normalizar(criterio);
 
     for (Recurso* recurso : recursos) {
-        std::string titulo = recurso->getTitulo();
-        if (titulo.find(criterio) != std::string::npos) {
+        std::string titulo = normalizar(recurso->getTitulo());
+        if (titulo.find(criterioNormalizado) != std::string::npos) {
             resultados.push_back(recurso);
         }
     }

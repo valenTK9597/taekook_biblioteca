@@ -2,3 +2,4 @@ L01|Cien años de soledad|Gabriel García Márquez|1967|1|LibroFisico
 E01|Curso de C++|Bjarne Stroustrup|2019|1|Ebook
 R01|National Geographic|NG Society|2022|1|Revista
 L02|Fuego Y Sangre|George R. R. Martin|2018|1|LibroFisico
+L03|Anillos de Fuego|Martin Garris|2024|1|LibroFisico
