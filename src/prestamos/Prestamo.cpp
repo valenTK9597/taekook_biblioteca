@@ -49,3 +49,5 @@ void Prestamo::mostrarDetalle() const {
     std::cout << " - Fecha devolución: " << fechaDevolucion << "\n";
     std::cout << " - Estado: " << estado->getNombre() << "\n";
 }
+
+

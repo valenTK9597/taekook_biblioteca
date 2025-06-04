@@ -213,6 +213,8 @@
   "args": [
     "-g",
     "main.cpp",
+    "src/notificaciones/ModuloNotificaciones.cpp",
+    "src/notificaciones/GestorNotificacionesArchivo.cpp",
     "src/busqueda/ModuloBusqueda.cpp",
     "src/prestamos/ModuloPrestamos.cpp",
     "src/recursos/ModuloRecursos.cpp",

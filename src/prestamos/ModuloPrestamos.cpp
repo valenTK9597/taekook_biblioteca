@@ -5,6 +5,10 @@
 #include "../../include/prestamos/EstadoPrestado.h"
 #include "../../include/prestamos/EstadoDisponible.h"
 #include "../../include/recursos/RecursoFactory.h"
+#include "../../include/notificaciones/SistemaNotificaciones.h"
+#include "../../include/notificaciones/UsuarioObserver.h"
+#include "../../include/usuarios/UsuarioFactory.h"
+#include "../../include/notificaciones/GestorNotificacionesArchivo.h"
 
 #include <iostream>
 #include <fstream>
@@ -127,11 +131,10 @@ void ModuloPrestamos::registrarPrestamo() {
     delete nuevo;
 }
 
-
-// Devolución por ID
+// ✅ Devolución por ID
 void ModuloPrestamos::devolverPrestamoPorId() {
     std::string id;
-    std::cout << "\n Devolver prestamo\nIngrese el ID del prestamo: ";
+    std::cout << "\n Devolver préstamo\nIngrese el ID del préstamo: ";
     std::cin >> id;
 
     std::ifstream entrada(rutaArchivoPrestamos);
@@ -162,8 +165,14 @@ void ModuloPrestamos::devolverPrestamoPorId() {
                 if (recurso) {
                     int diasRetraso = calcularDiasRetraso(fFin, fechaActual);
                     double multa = recurso->calcularMulta(diasRetraso);
-                    std::cout << " El prestamo fue devuelto con retraso.\n";
-                    std::cout << " Multa por " << diasRetraso << " dias de retraso: $" << multa << "\n";
+                    std::cout << " El préstamo fue devuelto con retraso.\n";
+                    std::cout << " Multa por " << diasRetraso << " días de retraso: $" << multa << "\n";
+
+                    // 🔔 Notificación de préstamo vencido
+                    GestorNotificacionesArchivo::guardarMensaje(uid, "⚠️ Has devuelto un préstamo vencido. Multa aplicada.");
+                    std::cout << "📧 Enviando email a usuario: Has devuelto un préstamo vencido.\n";
+                    std::cout << "📱 Enviando SMS: Has devuelto un préstamo vencido.\n";
+
                     delete recurso;
                 } else {
                     std::cout << "⚠️ No se pudo calcular la multa (recurso no encontrado).\n";
@@ -171,7 +180,8 @@ void ModuloPrestamos::devolverPrestamoPorId() {
 
             } else {
                 estado = "Devuelto";
-                std::cout << " Prestamo devuelto a tiempo.\n";
+                std::cout << " ✅ Préstamo devuelto a tiempo.\n";
+                GestorNotificacionesArchivo::guardarMensaje(uid, "📚 Has devuelto correctamente un recurso.");
             }
 
             encontrado = true;
@@ -188,7 +198,7 @@ void ModuloPrestamos::devolverPrestamoPorId() {
     std::rename("data/temp_prestamos.txt", rutaArchivoPrestamos.c_str());
 
     if (!encontrado) {
-        std::cout << " No se encontro prestamo valido para devolver.\n";
+        std::cout << " ❌ No se encontró préstamo válido para devolver.\n";
         return;
     }
 
@@ -209,6 +219,37 @@ void ModuloPrestamos::devolverPrestamoPorId() {
     archivoTemp.close();
     std::remove(rutaArchivoRecursos.c_str());
     std::rename("data/temp_recursos.txt", rutaArchivoRecursos.c_str());
+
+    // 🔔 Notificar a quienes tenían reserva
+    std::ifstream archivoReservas("data/reservas.txt");
+    std::vector<std::string> usuariosReservaron;
+    std::string lineaReserva;
+
+    while (getline(archivoReservas, lineaReserva)) {
+        std::stringstream ssReserva(lineaReserva);
+        std::string idUsuarioReserva, idRecursoReserva;
+        getline(ssReserva, idUsuarioReserva, '|');
+        getline(ssReserva, idRecursoReserva, '|');
+
+        if (idRecursoReserva == recursoDevueltoId) {
+            usuariosReservaron.push_back(idUsuarioReserva);
+        }
+    }
+    archivoReservas.close();
+
+    std::string mensaje = "🔔 El recurso que reservaste ya está disponible. Puedes solicitar el préstamo.";
+
+    if (!usuariosReservaron.empty()) {
+        for (const std::string& uidReserva : usuariosReservaron) {
+            Usuario* u = UsuarioFactory::obtenerUsuarioPorId(uidReserva, rutaArchivoUsuarios);
+            if (u) {
+                std::cout << "📧 Email a " << u->getCorreo() << ": " << mensaje << "\n";
+                std::cout << "📱 SMS a " << u->getCorreo() << ": " << mensaje << "\n";
+                GestorNotificacionesArchivo::guardarMensaje(uidReserva, mensaje);
+                delete u;
+            }
+        }
+    }
 }
 
 
@@ -219,11 +260,13 @@ void ModuloPrestamos::verPrestamosPorUsuario(const std::string& idUsuario) {
 
     std::cout << "\n Prestamos del usuario " << idUsuario << ":\n";
     for (Prestamo* p : prestamos) {
-        if (p->getIdUsuario() == idUsuario) {
-            p->mostrarDetalle();
-            encontrados = true;
-        }
+    if (p->getIdUsuario() == idUsuario) {
+    p->mostrarDetalle();
+    encontrados = true;
+ 
     }
+}
+
 
     if (!encontrados) {
         std::cout << " No se encontraron prestamos asociados a ese usuario.\n";
@@ -461,3 +504,48 @@ void ModuloPrestamos::exportarReporteAArchivo() {
     std::cout << " Reporte exportado en reportes/reporte_prestamos.txt.\n";
 }
 
+// Evento automático: enviar recordatorios de devolución administrador
+void ModuloPrestamos::enviarRecordatoriosDevolucion() {
+    std::vector<Prestamo*> prestamos = PrestamoFactory::cargarPrestamosDesdeArchivo(rutaArchivoPrestamos);
+    std::string hoy = obtenerFechaActual();
+
+    std::tm tmHoy = {};
+    std::istringstream ssHoy(hoy);
+    ssHoy >> std::get_time(&tmHoy, "%Y-%m-%d");
+    std::time_t tHoy = std::mktime(&tmHoy);
+
+    for (Prestamo* p : prestamos) {
+        if (p->getNombreEstado() == "Prestado") {
+            std::string fechaFin = p->getFechaDevolucion();
+
+            std::tm tmFin = {};
+            std::istringstream ssFin(fechaFin);
+            ssFin >> std::get_time(&tmFin, "%Y-%m-%d");
+            std::time_t tFin = std::mktime(&tmFin);
+
+            double diasRestantes = std::difftime(tFin, tHoy) / (60 * 60 * 24);
+
+            if (diasRestantes >= 0 && diasRestantes <= 2) {
+                // Notificar usuario
+                std::string uid = p->getIdUsuario();
+                Usuario* usuario = UsuarioFactory::obtenerUsuarioPorId(uid, rutaArchivoUsuarios);
+
+                if (usuario) {
+                    std::stringstream mensaje;
+                    mensaje << "📅 Recordatorio: tu préstamo con ID " << p->getIdPrestamo()
+                            << " vence en " << static_cast<int>(diasRestantes) << " día(s).";
+
+                    GestorNotificacionesArchivo::guardarMensaje(uid, mensaje.str());
+                    std::cout << "📧 Email a " << usuario->getCorreo() << ": " << mensaje.str() << "\n";
+                    std::cout << "📱 SMS a " << usuario->getCorreo() << ": " << mensaje.str() << "\n";
+
+                    delete usuario;
+                }
+            }
+        }
+    }
+
+    for (Prestamo* p : prestamos) delete p;
+
+    std::cout << "✅ Recordatorios de devolución enviados correctamente.\n";
+}

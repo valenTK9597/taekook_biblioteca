@@ -35,7 +35,6 @@ public:
 
     void registrar() const;
     double calcularMulta(const std::string& fechaActual) const;
-    void mostrarDetalle() const;
+    void mostrarDetalle() const; 
 };
-
-#endif
+#endif // PRESTAMO_H

@@ -45,6 +45,11 @@ public:
 
     // Exportar reporte general a archivo
     void exportarReporteAArchivo();
+
+    // Evento automático: enviar recordatorios de devolución
+    void enviarRecordatoriosDevolucion();
+
+
 };
 
 #endif

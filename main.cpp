@@ -6,12 +6,15 @@
 #include "include/recursos/ModuloRecursos.h"
 #include "include/prestamos/ModuloPrestamos.h"
 #include "include/busqueda/ModuloBusqueda.h"
+#include "include/notificaciones/ModuloNotificaciones.h"
 
 int main() {
     ModuloUsuarios moduloUsuarios("data/usuarios.txt");
     ModuloRecursos moduloRecursos("data/recursos.txt");
     ModuloPrestamos moduloPrestamos("data/prestamos.txt", "data/usuarios.txt", "data/recursos.txt");
     ModuloBusqueda moduloBusqueda("data/recursos.txt");
+    ModuloNotificaciones moduloNotificaciones("data/usuarios.txt");
+
 
     Usuario* usuarioActivo = nullptr;
 
@@ -35,6 +38,8 @@ int main() {
                 continue;
             }
 
+           moduloNotificaciones.verNotificacionesUsuario(usuarioActivo->getId(), "app");
+
             bool enSesion = true;
             while (enSesion) {
                 std::cout << "\n Bienvenido, " << usuarioActivo->getNombre()
@@ -46,7 +51,8 @@ int main() {
                     std::cout << "2. Ver recursos disponibles\n";
                     std::cout << "3. Buscar recursos\n";
                     std::cout << "4. Préstamos\n";
-                    std::cout << "5. Cerrar sesión\n";
+                    std::cout << "5. Notificaciones\n";
+                    std::cout << "6. Cerrar sesión\n";
 
                     int subopcion;
                     std::cout << "Seleccione una opción: ";
@@ -120,7 +126,10 @@ int main() {
                         }
 
                         case 5:
-                            std::cout << " Sesión cerrada.\n";
+                            moduloNotificaciones.gestionarNotificacionesUsuario(usuarioActivo->getId());
+                            break;
+                        case 6:
+                            std::cout << " Sesion cerrada.\n";
                             enSesion = false;
                             break;
 
@@ -135,7 +144,8 @@ int main() {
                     std::cout << "3. Gestionar recursos\n";
                     std::cout << "4. Gestionar préstamos\n";
                     std::cout << "5. Buscar recursos\n";
-                    std::cout << "6. Cerrar sesión\n";
+                    std::cout << "6. Ver notificaciones\n";
+                    std::cout << "7. Cerrar sesión\n";
 
                     int subopcion;
                     std::cout << "Seleccione una opción: ";
@@ -182,6 +192,9 @@ int main() {
                             break;
                         }
                         case 6:
+                            moduloNotificaciones.gestionarNotificacionesUsuario(usuarioActivo->getId());
+                            break;
+                        case 7:
                             std::cout << " Sesión cerrada.\n";
                             enSesion = false;
                             break;
