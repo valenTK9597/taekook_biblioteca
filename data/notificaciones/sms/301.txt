@@ -1,0 +1,11 @@
+[2025-06-06 23:15:11] 📚 Has devuelto correctamente un recurso.
+[2025-06-06 23:15:11] 🔔 El recurso que reservaste ya está disponible. Puedes solicitar el préstamo.
+[2025-06-06 23:49:33] 📅 Recordatorio: tu préstamo con ID 0226 vence en 1 día(s).
+[2025-06-06 23:50:50] 📅 Recordatorio: tu préstamo con ID 0226 vence en 1 día(s).
+[2025-06-07 00:02:17] 📅 Recordatorio: tu préstamo con ID 0226 vence en 0 día(s).
+[2025-06-07 00:02:17] 📅 Recordatorio: tu préstamo con ID 0223 vence en 1 día(s).
+[2025-06-07 02:34:00] 📅 Recordatorio: tu préstamo con ID 0226 vence en 0 día(s).
+[2025-06-07 03:08:56] ⚠️ Advertencia Grave: El recurso con ID E01 fue devuelto con un retraso de 33 día(s).
+[2025-06-07 03:20:45] ⚠️ Advertencia Grave: El recurso con ID E01 fue devuelto con un retraso de 33 día(s).
+[2025-06-07 03:23:13] ⚠️ Advertencia Grave: El recurso con ID E01 fue devuelto con un retraso de 33 día(s).
+[2025-06-07 03:32:07] ⚠️ Advertencia Grave: El recurso con ID E01 fue devuelto con un retraso de 33 día(s).

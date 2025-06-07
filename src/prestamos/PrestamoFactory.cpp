@@ -17,11 +17,15 @@ Prestamo* PrestamoFactory::crearPrestamo(const std::string& idPrestamo, const st
                                          const std::string& fechaDevolucion, const std::string& estadoNombre) {
     EstadoPrestamo* estado = nullptr;
 
-    if (estadoNombre == "Disponible") estado = new EstadoDisponible();
-    else if (estadoNombre == "Prestado") estado = new EstadoPrestado();
-    else if (estadoNombre == "Vencido") estado = new EstadoVencido();
-    else if (estadoNombre == "Devuelto") estado = new EstadoDevuelto();
+    std::string estadoLimpio = estadoNombre;
+    estadoLimpio.erase(remove_if(estadoLimpio.begin(), estadoLimpio.end(), ::isspace), estadoLimpio.end());
+
+    if (estadoLimpio == "Disponible") estado = new EstadoDisponible();
+    else if (estadoLimpio == "Prestado") estado = new EstadoPrestado();
+    else if (estadoLimpio == "Vencido") estado = new EstadoVencido();
+    else if (estadoLimpio == "Devuelto") estado = new EstadoDevuelto();
     else estado = new EstadoDisponible(); // Default de seguridad
+ 
 
     return new Prestamo(idPrestamo, idUsuario, idRecurso, fechaPrestamo, fechaDevolucion, estado);
 }
@@ -55,7 +59,7 @@ std::vector<Prestamo*> PrestamoFactory::cargarPrestamosDesdeArchivo(const std::s
         std::getline(ss, recurso, '|');
         std::getline(ss, fechaP, '|');
         std::getline(ss, fechaD, '|');
-        std::getline(ss, estado, '|');
+        std::getline(ss, estado);
 
         Prestamo* p = crearPrestamo(id, usuario, recurso, fechaP, fechaD, estado);
         prestamos.push_back(p);

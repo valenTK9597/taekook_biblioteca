@@ -1,6 +1,7 @@
 #include "../../include/prestamos/Prestamo.h"
 #include "../../include/prestamos/EstadoPrestamo.h"
 #include <iostream>
+#include <algorithm>
 
 Prestamo::Prestamo(std::string idPrestamo, std::string idUsuario, std::string idRecurso,
                    std::string fechaPrestamo, std::string fechaDevolucion, EstadoPrestamo* estado)
@@ -15,7 +16,11 @@ std::string Prestamo::getIdPrestamo() const { return idPrestamo; }
 std::string Prestamo::getIdUsuario() const { return idUsuario; }
 std::string Prestamo::getIdRecurso() const { return idRecurso; }
 std::string Prestamo::getFechaPrestamo() const { return fechaPrestamo; }
-std::string Prestamo::getFechaDevolucion() const { return fechaDevolucion; }
+std::string Prestamo::getFechaDevolucion() const { std::string fechaLimpia = fechaDevolucion;
+    fechaLimpia.erase(remove(fechaLimpia.begin(), fechaLimpia.end(), '\n'), fechaLimpia.end());
+    fechaLimpia.erase(remove(fechaLimpia.begin(), fechaLimpia.end(), '\r'), fechaLimpia.end());
+    fechaLimpia.erase(remove_if(fechaLimpia.begin(), fechaLimpia.end(), ::isspace), fechaLimpia.end());
+    return fechaLimpia;}
 
 EstadoPrestamo* Prestamo::getEstado() const { return estado; }
 std::string Prestamo::getNombreEstado() const { return estado->getNombre(); }

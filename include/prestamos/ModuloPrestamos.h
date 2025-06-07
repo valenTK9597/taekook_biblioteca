@@ -5,14 +5,19 @@
 #include "PrestamoFactory.h"
 #include <string>
 #include <vector>
+#include "../include/notificaciones/ModuloNotificaciones.h"
+
+class ModuloNotificaciones; // Forward declaration
 
 class ModuloPrestamos {
 private:
     std::string rutaArchivoPrestamos;
     std::string rutaArchivoUsuarios;
     std::string rutaArchivoRecursos;
+    
 
 public:
+
     // Constructor
     ModuloPrestamos(const std::string& rutaPrestamos, const std::string& rutaUsuarios, const std::string& rutaRecursos);
 
@@ -20,7 +25,7 @@ public:
     void registrarPrestamo();
 
     // Permitir devolución por ID de préstamo (solo si está en estado Prestado)
-    void devolverPrestamoPorId();
+    void devolverPrestamoPorId(ModuloNotificaciones& moduloNotificaciones);
 
     // Mostrar todos los préstamos de un usuario (para Estudiante o Profesor)
     void verPrestamosPorUsuario(const std::string& idUsuario);
@@ -38,18 +43,13 @@ public:
     void mostrarReporteEnConsola();
 
     // Forzar devolución (por parte de administrador)
-    void forzarDevolucionPorId();
+    void forzarDevolucionPorId(ModuloNotificaciones& moduloNotificaciones);
 
     // Cancelar un préstamo existente (error o anulación)
     void cancelarPrestamoPorId();
 
     // Exportar reporte general a archivo
     void exportarReporteAArchivo();
-
-    // Evento automático: enviar recordatorios de devolución
-    void enviarRecordatoriosDevolucion();
-
-
 };
 
 #endif
