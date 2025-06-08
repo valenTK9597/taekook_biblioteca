@@ -5,6 +5,12 @@
 #include "../../include/recursos/RecursoFactory.h"
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <set>
+#include <string>
 
 // Constructor
 ModuloBusqueda::ModuloBusqueda(const std::string& rutaRecursos)
@@ -71,7 +77,6 @@ void ModuloBusqueda::buscarPorAutor(bool incluirNoDisponibles) const {
     imprimirResultados(resultados, incluirNoDisponibles);
 }
 
-// 🔍 Buscar por tipo
 void ModuloBusqueda::buscarPorTipo(bool incluirNoDisponibles) const {
     std::string criterio;
     std::cout << "\n Ingrese el tipo de recurso a buscar (LibroFisico, Ebook, Revista, Articulo): ";
@@ -83,4 +88,29 @@ void ModuloBusqueda::buscarPorTipo(bool incluirNoDisponibles) const {
 
     imprimirResultados(resultados, incluirNoDisponibles);
 }
+
+std::map<std::string, int> ModuloBusqueda::contarRecursosPorTipoDesdeIds(const std::vector<std::string>& ids) const {
+    std::map<std::string, int> conteo;
+    std::ifstream archivo("data/recursos.txt");  // Se usa la ruta directa
+    std::string linea;
+
+    std::set<std::string> idsBuscados(ids.begin(), ids.end());
+
+    while (std::getline(archivo, linea)) {
+        std::istringstream iss(linea);
+        std::string id, tipo, titulo, autor;
+        std::getline(iss, id, '|');
+        std::getline(iss, tipo, '|');
+        std::getline(iss, titulo, '|');
+        std::getline(iss, autor, '|');
+
+        if (idsBuscados.count(id)) {
+            conteo[tipo]++;
+        }
+    }
+
+    return conteo;
+}
+
+
 

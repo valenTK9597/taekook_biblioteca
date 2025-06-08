@@ -5,6 +5,8 @@
 #include <vector>
 #include "BusquedaContexto.h"
 #include "../recursos/Recurso.h"
+#include "../recursos/RecursoFactory.h"
+#include <map>
 
 class ModuloBusqueda {
 private:
@@ -20,6 +22,8 @@ public:
     void buscarPorTitulo(bool incluirNoDisponibles) const;
     void buscarPorAutor(bool incluirNoDisponibles) const;
     void buscarPorTipo(bool incluirNoDisponibles) const;
+    std::map<std::string, int> contarRecursosPorTipoDesdeIds(const std::vector<std::string>& ids) const;
+
 };
 
 #endif

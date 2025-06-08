@@ -2,8 +2,6 @@
 #include "../../include/usuarios/UsuarioFactory.h"
 #include "../../include/prestamos/ModuloPrestamos.h"
 #include "../../include/notificaciones/GestorNotificacionesArchivo.h"
-#include "../../include/notificaciones/SistemaNotificaciones.h"
-#include "../../include/notificaciones/UsuarioObserver.h"
 #include "../../include/recursos/RecursoFactory.h"
 #include "../../include/prestamos/PrestamoFactory.h"
 #include "utils/Utilidades.h"

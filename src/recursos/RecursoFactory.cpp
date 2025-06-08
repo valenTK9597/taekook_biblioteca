@@ -143,5 +143,51 @@ Recurso* RecursoFactory::obtenerRecursoPorId(const std::string& id, const std::s
     return nullptr;
 }
 
+std::vector<Recurso*> RecursoFactory::leerRecursosDesdeArchivo(const std::string& ruta) {
+    std::vector<Recurso*> recursos;
+    std::ifstream archivo(ruta);
+    std::string linea;
 
+    while (std::getline(archivo, linea)) {
+        std::stringstream ss(linea);
+        std::string id, titulo, autor, anioStr, disponibleStr, tipo;
+        std::getline(ss, id, '|');
+        std::getline(ss, titulo, '|');
+        std::getline(ss, autor, '|');
+        std::getline(ss, anioStr, '|');
+        std::getline(ss, disponibleStr, '|');
+        std::getline(ss, tipo);
+
+        int anio = std::stoi(anioStr);
+        bool disponible = (disponibleStr == "1");
+
+        Recurso* recurso = nullptr;
+        if (tipo == "LibroFisico") {
+            recurso = new LibroFisico(id, titulo, autor, anio, disponible);
+        } else if (tipo == "Revista") {
+            recurso = new Revista(id, titulo, autor, anio, disponible);
+        } else if (tipo == "Ebook") {
+            recurso = new Ebook(id, titulo, autor, anio, disponible);
+        } else if (tipo == "Articulo") {
+            recurso = new Articulo(id, titulo, autor, anio, disponible);
+        }
+
+        if (recurso != nullptr) {
+            recursos.push_back(recurso);
+        }
+    }
+
+    archivo.close();
+    return recursos;
+}
+
+Recurso* RecursoFactory::buscarRecursoPorId(const std::string& idBuscado) {
+    std::vector<Recurso*> recursos = leerRecursosDesdeArchivo("data/recursos.txt");
+    for (Recurso* r : recursos) {
+        if (r->getId() == idBuscado) {
+            return r; // No eliminamos, se reutiliza
+        }
+    }
+    return nullptr;
+}
 

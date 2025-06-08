@@ -5,8 +5,7 @@
 #include "../../include/prestamos/EstadoPrestado.h"
 #include "../../include/prestamos/EstadoDisponible.h"
 #include "../../include/recursos/RecursoFactory.h"
-#include "../../include/notificaciones/SistemaNotificaciones.h"
-#include "../../include/notificaciones/UsuarioObserver.h"
+#include "../../include/recursos/ModuloRecursos.h"
 #include "../../include/usuarios/UsuarioFactory.h"
 #include "../../include/notificaciones/GestorNotificacionesArchivo.h"
 #include "../../include/notificaciones/ModuloNotificaciones.h"
@@ -18,6 +17,11 @@
 #include <limits>
 #include <iomanip>
 #include <ctime>
+#include <vector>
+#include <filesystem>
+#include <map>
+
+
 
 ModuloNotificaciones moduloNotificaciones;
 
@@ -28,6 +32,36 @@ ModuloPrestamos::ModuloPrestamos(const std::string& rutaPrestamos,
     : rutaArchivoPrestamos(rutaPrestamos),
       rutaArchivoUsuarios(rutaUsuarios),
       rutaArchivoRecursos(rutaRecursos) {}
+
+
+
+// Implementación de la función guardarHistorial
+
+void ModuloPrestamos::guardarHistorial(const std::string& nombreUsuario, const std::string& idRecurso) {
+    std::filesystem::create_directories("data/historiales");
+
+    std::string rutaArchivo = "data/historiales/historial_" + nombreUsuario + ".txt";
+
+    ModuloRecursos gestorRecursos(rutaArchivoRecursos);
+    Recurso* recurso = gestorRecursos.obtenerRecursoPorId(idRecurso);
+
+    if (!recurso) {
+        std::cout << "❌ No se pudo encontrar el recurso para guardar en el historial.\n";
+        return;
+    }
+
+    std::string titulo = recurso->getTitulo();
+    std::string tipo = recurso->getTipo();
+    delete recurso;
+
+    std::ofstream archivo(rutaArchivo, std::ios::app);
+    if (archivo.is_open()) {
+        archivo << "✅ Préstamo realizado: [" << idRecurso << "] " << titulo << " | Tipo: " << tipo << "\n";
+        archivo.close();
+    } else {
+        std::cout << "❌ No se pudo guardar el historial.\n";
+    }
+}
 
 
 // Registrar nuevo préstamo
@@ -101,6 +135,9 @@ void ModuloPrestamos::registrarPrestamo() {
     std::rename("data/temp_recursos.txt", rutaArchivoRecursos.c_str());
 
     delete nuevo;
+
+    guardarHistorial(idUsuario, idRecurso);
+
 }
 
 // ✅ Devolución por ID
@@ -473,3 +510,6 @@ void ModuloPrestamos::exportarReporteAArchivo() {
     salida.close();
     std::cout << " Reporte exportado en reportes/reporte_prestamos.txt.\n";
 }
+
+
+

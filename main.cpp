@@ -7,6 +7,8 @@
 #include "include/prestamos/ModuloPrestamos.h"
 #include "include/busqueda/ModuloBusqueda.h"
 #include "include/notificaciones/ModuloNotificaciones.h"
+#include "include/recomendaciones/ModuloRecomendaciones.h"
+
 
 int main() {
     ModuloUsuarios moduloUsuarios("data/usuarios.txt");
@@ -14,6 +16,8 @@ int main() {
     ModuloPrestamos moduloPrestamos("data/prestamos.txt", "data/usuarios.txt", "data/recursos.txt");
     ModuloBusqueda moduloBusqueda("data/recursos.txt");
     ModuloNotificaciones moduloNotificaciones("data/usuarios.txt");
+    ModuloRecomendaciones moduloRecomendaciones("data/recursos.txt", "data/prestamos.txt", "data/usuarios.txt");
+
 
     Usuario* usuarioActivo = nullptr;
 
@@ -52,7 +56,8 @@ int main() {
                     std::cout << "3. Buscar recursos\n";
                     std::cout << "4. Préstamos\n";
                     std::cout << "5. Notificaciones\n";
-                    std::cout << "6. Cerrar sesión\n";
+                    std::cout << "6. Ver recomendaciones\n";
+                    std::cout << "7. Cerrar sesión\n";
 
                     int subopcion;
                     std::cout << "Seleccione una opción: ";
@@ -128,6 +133,9 @@ int main() {
                             moduloNotificaciones.gestionarNotificacionesUsuario(usuarioActivo->getId(), moduloPrestamos);
                             break;
                         case 6:
+                            moduloRecomendaciones.mostrarSubmenuRecomendaciones(usuarioActivo->getNombre(), usuarioActivo->getTipo());
+                            break;
+                        case 7:
                             std::cout << " Sesion cerrada.\n";
                             enSesion = false;
                             break;

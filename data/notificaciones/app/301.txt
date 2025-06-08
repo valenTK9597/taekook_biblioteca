@@ -10,3 +10,7 @@
 [2025-06-07 03:20:45] ⚠️ Advertencia Grave: El recurso con ID E01 fue devuelto con un retraso de 33 día(s).
 [2025-06-07 03:23:13] ⚠️ Advertencia Grave: El recurso con ID E01 fue devuelto con un retraso de 33 día(s).
 [2025-06-07 03:32:07] ⚠️ Advertencia Grave: El recurso con ID E01 fue devuelto con un retraso de 33 día(s).
+[2025-06-07 17:52:31] 📚 Has devuelto correctamente un recurso.
+[2025-06-07 17:52:58] 📚 Has devuelto correctamente un recurso.
+[2025-06-07 17:52:58] 🔔 El recurso que reservaste ya está disponible. Puedes solicitar el préstamo.
+[2025-06-07 17:53:37] ⚠️ Has devuelto un préstamo vencido. Multa aplicada.

@@ -16,6 +16,8 @@ public:
     static bool idExistente(const std::string& id, const std::string& rutaArchivo);
     static bool eliminarRecursoPorId(const std::string& id, const std::string& rutaArchivo);
     static Recurso* obtenerRecursoPorId(const std::string& id, const std::string& rutaArchivo);
+    static std::vector<Recurso*> leerRecursosDesdeArchivo(const std::string& ruta);
+    static Recurso* buscarRecursoPorId(const std::string& id);
 
 };
 

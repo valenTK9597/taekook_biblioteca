@@ -21,6 +21,9 @@ public:
     // Constructor
     ModuloPrestamos(const std::string& rutaPrestamos, const std::string& rutaUsuarios, const std::string& rutaRecursos);
 
+    // Función auxiliar para guardar historial de usuario
+    void guardarHistorial(const std::string& nombreUsuario, const std::string& idRecurso);
+
     // Registrar un nuevo préstamo (respetando reglas por tipo de usuario y recurso)
     void registrarPrestamo();
 
@@ -49,7 +52,7 @@ public:
     void cancelarPrestamoPorId();
 
     // Exportar reporte general a archivo
-    void exportarReporteAArchivo();
+    void exportarReporteAArchivo();  
 };
 
 #endif

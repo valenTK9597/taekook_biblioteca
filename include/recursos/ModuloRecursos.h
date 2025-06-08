@@ -10,6 +10,8 @@ private:
 
 public:
     ModuloRecursos(const std::string& ruta);
+    Recurso* obtenerRecursoPorId(const std::string& idBuscado);
+
 
     void agregarRecurso();
     void verRecursosDisponibles();

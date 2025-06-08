@@ -8,6 +8,11 @@
 
 ModuloRecursos::ModuloRecursos(const std::string& ruta) : rutaArchivoRecursos(ruta) {}
 
+Recurso* ModuloRecursos::obtenerRecursoPorId(const std::string& idBuscado) {
+    return RecursoFactory::obtenerRecursoPorId(idBuscado, rutaArchivoRecursos);
+}
+
+
 void ModuloRecursos::agregarRecurso() {
     std::string tipo, id, titulo, autor;
     int anio;
