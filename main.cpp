@@ -23,12 +23,12 @@ int main() {
 
     while (true) {
         std::cout << "\n Sistema de Biblioteca Virtual\n";
-        std::cout << "1. Iniciar sesión\n";
+        std::cout << "1. Iniciar sesion\n";
         std::cout << "2. Registrarse\n";
         std::cout << "3. Salir\n";
 
         int opcion;
-        std::cout << "Seleccione una opción: ";
+        std::cout << "Seleccione una opcion: ";
         std::cin >> opcion;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -37,7 +37,7 @@ int main() {
             usuarioActivo = moduloUsuarios.iniciarSesion();
 
             if (!usuarioActivo) {
-                std::cout << " Usuario o contraseña incorrectos.\n";
+                std::cout << " Usuario o contrasena incorrectos.\n";
                 continue;
             }
 
@@ -54,13 +54,13 @@ int main() {
                     std::cout << "\n1. Editar perfil\n";
                     std::cout << "2. Ver recursos disponibles\n";
                     std::cout << "3. Buscar recursos\n";
-                    std::cout << "4. Préstamos\n";
+                    std::cout << "4. Prestamos\n";
                     std::cout << "5. Notificaciones\n";
                     std::cout << "6. Ver recomendaciones\n";
-                    std::cout << "7. Cerrar sesión\n";
+                    std::cout << "7. Cerrar sesion\n";
 
                     int subopcion;
-                    std::cout << "Seleccione una opción: ";
+                    std::cout << "Seleccione una opcion: ";
                     std::cin >> subopcion;
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -77,14 +77,14 @@ int main() {
                         case 3: {
                             bool buscando = true;
                             while (buscando) {
-                                std::cout << "\n 🔍 Submenú de búsqueda:\n";
-                                std::cout << "1. Buscar por título\n";
+                                std::cout << "\n Submenu de busqueda:\n";
+                                std::cout << "1. Buscar por titulo\n";
                                 std::cout << "2. Buscar por autor\n";
                                 std::cout << "3. Buscar por tipo\n";
                                 std::cout << "4. Volver\n";
 
                                 int b;
-                                std::cout << "Seleccione una opción: ";
+                                std::cout << "Seleccione una opcion: ";
                                 std::cin >> b;
                                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -94,7 +94,7 @@ int main() {
                                     case 2: moduloBusqueda.buscarPorAutor(false); break;
                                     case 3: moduloBusqueda.buscarPorTipo(false); break;
                                     case 4: buscando = false; break;
-                                    default: std::cout << " Opción inválida.\n";
+                                    default: std::cout << " Opcion invalida.\n";
                                 }
                             }
                             break;
@@ -103,16 +103,16 @@ int main() {
                         case 4: {
                             bool gestionando = true;
                             while (gestionando) {
-                                std::cout << "\n 📚 Submenú de préstamos:\n";
-                                std::cout << "1. Solicitar préstamo\n";
-                                std::cout << "2. Ver mis préstamos\n";
-                                std::cout << "3. Devolver un préstamo\n";
+                                std::cout << "\n Submenu de prestamos:\n";
+                                std::cout << "1. Solicitar prestamo\n";
+                                std::cout << "2. Ver mis prestamos\n";
+                                std::cout << "3. Devolver un prestamo\n";
                                 std::cout << "4. Ver reservas\n";
                                 std::cout << "5. Cancelar una reserva\n";
                                 std::cout << "6. Volver\n";
 
                                 int p;
-                                std::cout << "Seleccione una opción: ";
+                                std::cout << "Seleccione una opcion: ";
                                 std::cin >> p;
                                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -124,7 +124,7 @@ int main() {
                                     case 4: moduloPrestamos.verReservasUsuario(usuarioActivo->getId()); break;
                                     case 5: moduloPrestamos.cancelarReservaUsuario(usuarioActivo->getId()); break;
                                     case 6: gestionando = false; break;
-                                    default: std::cout << " Opción inválida.\n";
+                                    default: std::cout << " Opcion invalida.\n";
                                 }
                             }
                             break;
@@ -140,7 +140,7 @@ int main() {
                             enSesion = false;
                             break;
                         default:
-                            std::cout << " Opción inválida.\n";
+                            std::cout << " Opcion invalida.\n";
                     }
 
                 // 🔸 Administrador
@@ -148,13 +148,13 @@ int main() {
                     std::cout << "\n1. Editar perfil\n";
                     std::cout << "2. Gestionar usuarios\n";
                     std::cout << "3. Gestionar recursos\n";
-                    std::cout << "4. Gestionar préstamos\n";
+                    std::cout << "4. Gestionar prestamos\n";
                     std::cout << "5. Buscar recursos\n";
                     std::cout << "6. Gestionar notificaciones\n";
-                    std::cout << "7. Cerrar sesión\n";
+                    std::cout << "7. Cerrar sesion\n";
 
                     int subopcion;
-                    std::cout << "Seleccione una opción: ";
+                    std::cout << "Seleccione una opcion: ";
                     std::cin >> subopcion;
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -175,14 +175,14 @@ int main() {
                         case 5: {
                             bool buscando = true;
                             while (buscando) {
-                                std::cout << "\n 🔍 Submenú de búsqueda (Administrador):\n";
-                                std::cout << "1. Buscar por título\n";
+                                std::cout << "\n Submenu de busqueda (Administrador):\n";
+                                std::cout << "1. Buscar por titulo\n";
                                 std::cout << "2. Buscar por autor\n";
                                 std::cout << "3. Buscar por tipo\n";
                                 std::cout << "4. Volver\n";
 
                                 int b;
-                                std::cout << "Seleccione una opción: ";
+                                std::cout << "Seleccione una opcion: ";
                                 std::cin >> b;
                                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -192,7 +192,7 @@ int main() {
                                     case 2: moduloBusqueda.buscarPorAutor(true); break;
                                     case 3: moduloBusqueda.buscarPorTipo(true); break;
                                     case 4: buscando = false; break;
-                                    default: std::cout << " Opción inválida.\n";
+                                    default: std::cout << " Opcion invalida.\n";
                                 }
                             }
                             break;
@@ -201,11 +201,11 @@ int main() {
                             moduloNotificaciones.gestionarNotificacionesUsuario(usuarioActivo->getId(), moduloPrestamos);
                             break;
                         case 7:
-                            std::cout << " Sesión cerrada.\n";
+                            std::cout << " Sesion cerrada.\n";
                             enSesion = false;
                             break;
                         default:
-                            std::cout << " Opción inválida.\n";
+                            std::cout << " Opcion invalida.\n";
                     }
                 }
             }
@@ -224,7 +224,7 @@ int main() {
         }
 
         else {
-            std::cout << " Opción no válida.\n";
+            std::cout << " Opcion no valida.\n";
         }
     }
 

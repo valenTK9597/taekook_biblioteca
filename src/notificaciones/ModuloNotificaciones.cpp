@@ -36,7 +36,7 @@ std::string ModuloNotificaciones::obtenerRutaNotificacion(const std::string& can
 
 // Mostrar notificaciones según canal
 void ModuloNotificaciones::verNotificacionesUsuario(const std::string& idUsuario, const std::string& canal) const {
-    std::cout << "\n🔔 Notificaciones por " << canal << ":\n";
+    std::cout << "\n Notificaciones por " << canal << ":\n";
 
     std::vector<std::string> mensajes = GestorNotificacionesArchivo::leerMensajes(idUsuario, canal);
 
@@ -57,30 +57,30 @@ void ModuloNotificaciones::gestionarNotificacionesUsuario(const std::string& idU
 
     bool gestionando = true;
     while (gestionando) {
-        std::cout << "\n🔔 Submenú de Notificaciones (" << tipo << "):\n";
+        std::cout << "\n Submenu de Notificaciones (" << tipo << "):\n";
 
         // Menú dinámico según tipo de usuario
         if (tipo == "Estudiante" || tipo == "Profesor") {
-            std::cout << "1. Ver en la aplicación\n";
+            std::cout << "1. Ver en la aplicacion\n";
             std::cout << "2. Ver por correo (email)\n";
             std::cout << "3. Ver por SMS\n";
-            std::cout << "4. Ver recordatorios de devolución\n";
+            std::cout << "4. Ver recordatorios de devolucion\n";
             std::cout << "5. Volver\n";
         } else if (tipo == "Administrador") {
-            std::cout << "1. Ver en la aplicación\n";
+            std::cout << "1. Ver en la aplicacion\n";
             std::cout << "2. Ver por correo (email)\n";
             std::cout << "3. Ver por SMS\n";
-            std::cout << "4. Enviar notificación manual a un usuario\n";
-            std::cout << "5. Enviar recordatorios de devolución a todos los usuarios\n";
+            std::cout << "4. Enviar notificacion manual a un usuario\n";
+            std::cout << "5. Enviar recordatorios de devolucion a todos los usuarios\n";
             std::cout << "6. Enviar advertencia devolucion vencida a un usuario\n";
             std::cout << "7. Volver\n";
         } else {
-            std::cout << "❌ Tipo de usuario no reconocido.\n";
+            std::cout << " Tipo de usuario no reconocido.\n";
             return;
         }
 
         int opcion;
-        std::cout << "Seleccione una opción: ";
+        std::cout << "Seleccione una opcion: ";
         std::cin >> opcion;
         std::cin.ignore();
 
@@ -103,7 +103,7 @@ void ModuloNotificaciones::gestionarNotificacionesUsuario(const std::string& idU
                     gestionando = false;
                     break;
                 default:
-                    std::cout << "❌ Opción inválida.\n";
+                    std::cout << " Opcion invalida.\n";
             }
         } else if (tipo == "Administrador") {
             switch (opcion) {
@@ -129,7 +129,7 @@ void ModuloNotificaciones::gestionarNotificacionesUsuario(const std::string& idU
                     gestionando = false;
                     break;
                 default:
-                    std::cout << "❌ Opción inválida.\n";
+                    std::cout << " Opcion invalida.\n";
             }
         }
     }
@@ -138,20 +138,20 @@ void ModuloNotificaciones::gestionarNotificacionesUsuario(const std::string& idU
 void ModuloNotificaciones::enviarNotificacionManual(const std::string& idRemitente) {
     Usuario* remitente = UsuarioFactory::obtenerUsuarioPorId(idRemitente, rutaArchivoUsuarios);
     if (!remitente) {
-        std::cout << "❌ No se pudo obtener el remitente.\n";
+        std::cout << " No se pudo obtener el remitente.\n";
         return;
     }
 
     std::string tipoRemitente = remitente->getTipo();
     std::string idDestino;
 
-    std::cout << "\n✉️ Enviar notificación\n";
+    std::cout << "\n Enviar notificacion\n";
 
     if (esAdministrador(tipoRemitente)) {
         std::cout << "ID del usuario destino: ";
         std::cin >> idDestino;
     } else {
-        std::cout << "🔐 Solo puedes enviar notificaciones a administradores.\n";
+        std::cout << "Solo puedes enviar notificaciones a los administradores.\n";
         std::vector<Usuario*> usuarios = UsuarioFactory::cargarUsuariosDesdeArchivo(rutaArchivoUsuarios);
         for (Usuario* u : usuarios) {
             if (u->getTipo() == "Administrador") {
@@ -162,7 +162,7 @@ void ModuloNotificaciones::enviarNotificacionManual(const std::string& idRemiten
         for (Usuario* u : usuarios) delete u;
 
         if (idDestino.empty()) {
-            std::cout << "⚠️ No hay administradores registrados.\n";
+            std::cout << "No hay administradores registrados.\n";
             delete remitente;
             return;
         }
@@ -170,7 +170,7 @@ void ModuloNotificaciones::enviarNotificacionManual(const std::string& idRemiten
 
     Usuario* receptor = UsuarioFactory::obtenerUsuarioPorId(idDestino, rutaArchivoUsuarios);
     if (!receptor) {
-        std::cout << "❌ Usuario destino no encontrado.\n";
+        std::cout << " Usuario destino no encontrado.\n";
         delete remitente;
         return;
     }
@@ -185,7 +185,7 @@ void ModuloNotificaciones::enviarNotificacionManual(const std::string& idRemiten
     std::getline(std::cin, canal);
 
     if (!canalValido(canal)) {
-        std::cout << "❌ Canal inválido. Usa: app, email o sms.\n";
+        std::cout << " Canal invalido. Usa: app, email o sms.\n";
         delete remitente;
         delete receptor;
         return;
@@ -194,13 +194,13 @@ void ModuloNotificaciones::enviarNotificacionManual(const std::string& idRemiten
     std::string mensajeFormateado = "(De: " + remitente->getNombre() + ") " + mensaje;
 
     GestorNotificacionesArchivo::guardarMensaje(idDestino, mensajeFormateado, canal);
-    std::cout << "✅ Notificación enviada por " << canal << ".\n";
+    std::cout << " Notificacion enviada por " << canal << ".\n";
 
     delete remitente;
     delete receptor;
 }
 
-
+//++++++++
 void procesarRecordatorios(const std::vector<Prestamo*>& prestamos, const std::string& rutaArchivoUsuarios, const std::string& idFiltrado = "") {
     std::string hoy = obtenerFechaActual();
     bool enviados = false;
@@ -215,13 +215,13 @@ void procesarRecordatorios(const std::vector<Prestamo*>& prestamos, const std::s
             Usuario* usuario = UsuarioFactory::obtenerUsuarioPorId(p->getIdUsuario(), rutaArchivoUsuarios);
             if (usuario) {
                 std::stringstream mensaje;
-                mensaje << "📅 Recordatorio: tu préstamo con ID " << p->getIdPrestamo()
-                        << " vence en " << dias << " día(s).";
+                mensaje << " Recordatorio: tu prestamo con ID " << p->getIdPrestamo()
+                        << " vence en " << dias << " dia(s).";
                 GestorNotificacionesArchivo::guardarMensaje(usuario->getId(), mensaje.str(), "app");
                 GestorNotificacionesArchivo::guardarMensaje(usuario->getId(), mensaje.str(), "email");
                 GestorNotificacionesArchivo::guardarMensaje(usuario->getId(), mensaje.str(), "sms");
-                std::cout << "📧 Email a " << usuario->getCorreo() << ": " << mensaje.str() << "\n";
-                std::cout << "📱 SMS a " << usuario->getCorreo() << ": " << mensaje.str() << "\n";
+                std::cout << " Email a " << usuario->getCorreo() << ": " << mensaje.str() << "\n";
+                std::cout << " SMS a " << usuario->getCorreo() << ": " << mensaje.str() << "\n";
                 enviados = true;
                 delete usuario;
             }
@@ -229,9 +229,9 @@ void procesarRecordatorios(const std::vector<Prestamo*>& prestamos, const std::s
     }
 
     if (!enviados) {
-        std::cout << "✅ No hay préstamos próximos a vencer.\n";
+        std::cout << " No hay prestamos proximos a vencer.\n";
     } else {
-        std::cout << "✅ Recordatorios generados correctamente.\n";
+        std::cout << " Recordatorios generados correctamente.\n";
     }
 }
 
@@ -250,37 +250,37 @@ void ModuloNotificaciones::enviarRecordatoriosDevolucionPorUsuario(const std::st
 }
 
 void ModuloNotificaciones::notificarDevolucionConRetraso(const std::string& idUsuario) {
-    std::string mensaje = "⚠️ Has devuelto un préstamo vencido. Multa aplicada.";
+    std::string mensaje = " Has devuelto un prestamo vencido. Multa aplicada.";
     GestorNotificacionesArchivo::guardarMensaje(idUsuario, mensaje, "app");
     GestorNotificacionesArchivo::guardarMensaje(idUsuario, mensaje, "email");
     GestorNotificacionesArchivo::guardarMensaje(idUsuario, mensaje, "sms");
-    std::cout << "📧 Enviando email a usuario: " << mensaje << "\n";
-    std::cout << "📱 Enviando SMS: " << mensaje << "\n";
+    std::cout << " Enviando email a usuario: " << mensaje << "\n";
+    std::cout << " Enviando SMS: " << mensaje << "\n";
     
 }
 
 void ModuloNotificaciones::notificarDevolucionExitosa(const std::string& idUsuario) {
-    std::string mensaje = "📚 Has devuelto correctamente un recurso.";
+    std::string mensaje = " Has devuelto correctamente un recurso.";
     GestorNotificacionesArchivo::guardarMensaje(idUsuario, mensaje, "app");
     GestorNotificacionesArchivo::guardarMensaje(idUsuario, mensaje, "email");
     GestorNotificacionesArchivo::guardarMensaje(idUsuario, mensaje, "sms");
-    std::cout << "📧 Enviando email a usuario: " << mensaje << "\n";
-    std::cout << "📱 Enviando SMS: " << mensaje << "\n";
+    std::cout << " Enviando email a usuario: " << mensaje << "\n";
+    std::cout << " Enviando SMS: " << mensaje << "\n";
  
 }
 
 void ModuloNotificaciones::notificarReservaDisponible(const std::vector<std::string>& usuarios, const std::string& idRecurso) {
-    std::string mensaje = "🔔 El recurso que reservaste ya está disponible. Puedes solicitar el préstamo.";
+    std::string mensaje = " El recurso que reservaste ya se encuentra disponible. Puedes solicitar el prestamo.";
     for (const std::string& uid : usuarios) {
         Usuario* u = UsuarioFactory::obtenerUsuarioPorId(uid, rutaArchivoUsuarios);
         if (u) {
-            std::cout << "📧 Email a " << u->getCorreo() << ": " << mensaje << "\n";
-            std::cout << "📱 SMS a " << u->getCorreo() << ": " << mensaje << "\n";
+            std::cout << " Email a " << u->getCorreo() << ": " << mensaje << "\n";
+            std::cout << " SMS a " << u->getCorreo() << ": " << mensaje << "\n";
 
             GestorNotificacionesArchivo::guardarMensaje(uid, mensaje, "app");
             GestorNotificacionesArchivo::guardarMensaje(uid, mensaje, "email");
             GestorNotificacionesArchivo::guardarMensaje(uid, mensaje, "sms");
-            std::cout << "✅ Notificación enviada a " << u->getNombre() << ".\n";
+            std::cout << " Notificacion enviada a " << u->getNombre() << ".\n";
         
             delete u;
         }
@@ -303,15 +303,15 @@ void ModuloNotificaciones::enviarAdvertenciasGravesPorVencimiento(const std::str
             std::string rid = p->getIdRecurso();
 
             std::stringstream mensaje;
-            mensaje << "⚠️ Advertencia Grave: El recurso con ID " << rid
-                    << " fue devuelto con un retraso de " << diasRetraso << " día(s).";
+            mensaje << " Advertencia Grave: El recurso con ID " << rid
+                    << " fue devuelto con un retraso de " << diasRetraso << " dia(s).";
 
             // Canales estándar
             GestorNotificacionesArchivo::guardarMensaje(uid, mensaje.str(), "app");
             GestorNotificacionesArchivo::guardarMensaje(uid, mensaje.str(), "email");
             GestorNotificacionesArchivo::guardarMensaje(uid, mensaje.str(), "sms");
 
-            std::cout << "🚨 Advertencia enviada a " << uid << " por retraso de " << diasRetraso << " días.\n";
+            std::cout << " Advertencia enviada a " << uid << " por retraso de " << diasRetraso << " dia(s).\n";
             enviadas = true;
         }
     }
@@ -319,9 +319,9 @@ void ModuloNotificaciones::enviarAdvertenciasGravesPorVencimiento(const std::str
     for (Prestamo* p : prestamos) delete p;
 
     if (!enviadas)
-        std::cout << "✅ No hay préstamos vencidos actualmente.\n";
+        std::cout << " No hay prestamos vencidos actualmente.\n";
     else
-        std::cout << "✅ Advertencias graves enviadas correctamente.\n";
+        std::cout << " Advertencias graves enviadas correctamente.\n";
 }
 
 

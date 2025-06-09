@@ -33,7 +33,7 @@ void RecursoFactory::guardarRecursoEnArchivo(Recurso* recurso, const std::string
                 << recurso->getTipo() << "\n";
         archivo.close();
     } else {
-        std::cerr << "⚠️ No se pudo abrir el archivo para guardar el recurso.\n";
+        std::cerr << " No se pudo abrir el archivo para guardar el recurso.\n";
     }
 }
 
@@ -90,7 +90,7 @@ bool RecursoFactory::eliminarRecursoPorId(const std::string& id, const std::stri
     std::string linea;
 
     if (!archivoOriginal.is_open() || !archivoTemporal.is_open()) {
-        std::cerr << "⚠️ No se pudo abrir uno de los archivos para eliminacion.\n";
+        std::cerr << " No se pudo abrir uno de los archivos para eliminacion.\n";
         return false;
     }
 

@@ -32,12 +32,12 @@ void Prestamo::setEstado(EstadoPrestamo* nuevoEstado) {
 }
 
 void Prestamo::registrar() const {
-    std::cout << " - Préstamo registrado:\n";
-    std::cout << " - ID Préstamo: " << idPrestamo << "\n";
+    std::cout << " - Prestamo registrado:\n";
+    std::cout << " - ID Prestamo: " << idPrestamo << "\n";
     std::cout << " - Usuario: " << idUsuario << "\n";
     std::cout << " - Recurso: " << idRecurso << "\n";
-    std::cout << " - Fecha préstamo: " << fechaPrestamo << "\n";
-    std::cout << " - Fecha devolución: " << fechaDevolucion << "\n";
+    std::cout << " - Fecha prestamo: " << fechaPrestamo << "\n";
+    std::cout << " - Fecha devolucion: " << fechaDevolucion << "\n";
     estado->mostrarEstado();
 }
 
@@ -46,12 +46,12 @@ double Prestamo::calcularMulta(const std::string& fechaActual) const {
 }
 
 void Prestamo::mostrarDetalle() const {
-    std::cout << "\n Detalle del préstamo:\n";
+    std::cout << "\n Detalle del prestamo:\n";
     std::cout << " - ID: " << idPrestamo << "\n";
     std::cout << " - Usuario: " << idUsuario << "\n";
     std::cout << " - Recurso: " << idRecurso << "\n";
-    std::cout << " - Fecha préstamo: " << fechaPrestamo << "\n";
-    std::cout << " - Fecha devolución: " << fechaDevolucion << "\n";
+    std::cout << " - Fecha prestamo: " << fechaPrestamo << "\n";
+    std::cout << " - Fecha devolucion: " << fechaDevolucion << "\n";
     std::cout << " - Estado: " << estado->getNombre() << "\n";
 }
 

@@ -298,7 +298,7 @@ void ModuloUsuarios::gestionarUsuariosAdministrador() {
             case 3: eliminarUsuarioPorId(); break;
             case 4: editarUsuarioPorId(); break;
             case 5: continuar = false; break;
-            default: std::cout << "⚠️ Opcion invalida.\n";
+            default: std::cout << " Opcion invalida.\n";
         }
     }
 }

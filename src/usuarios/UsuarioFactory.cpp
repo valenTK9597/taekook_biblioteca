@@ -33,7 +33,7 @@ void UsuarioFactory::guardarUsuarioEnArchivo(Usuario* usuario, const std::string
                 << usuario->getTipo() << "\n";
         archivo.close();
     } else {
-        std::cerr << "⚠️ No se pudo abrir el archivo para guardar el usuario.\n";
+        std::cerr << " No se pudo abrir el archivo para guardar el usuario.\n";
     }
 }
 

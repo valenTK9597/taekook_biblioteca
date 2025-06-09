@@ -41,7 +41,7 @@ void PrestamoFactory::guardarPrestamoEnArchivo(Prestamo* prestamo, const std::st
                 << prestamo->getNombreEstado() << "\n";
         archivo.close();
     } else {
-        std::cerr << "⚠️ No se pudo abrir el archivo de préstamos para guardar.\n";
+        std::cerr << " No se pudo abrir el archivo de prestamos para guardar.\n";
     }
 }
 
@@ -141,7 +141,7 @@ bool PrestamoFactory::validarReglasPrestamo(const std::string& idUsuario,
     // Obtener datos del recurso
     Recurso* recurso = RecursoFactory::obtenerRecursoPorId(idRecurso, rutaRecursos);
     if (!recurso) {
-        std::cout << "❌ Recurso no encontrado.\n";
+        std::cout << " Recurso no encontrado.\n";
         return false;
     }
     std::string tipoRecurso = recurso->getTipo();
@@ -150,7 +150,7 @@ bool PrestamoFactory::validarReglasPrestamo(const std::string& idUsuario,
     // Obtener datos del usuario
     Usuario* usuario = UsuarioFactory::obtenerUsuarioPorId(idUsuario, rutaUsuarios);
     if (!usuario) {
-        std::cout << "❌ Usuario no encontrado.\n";
+        std::cout << " Usuario no encontrado.\n";
         return false;
     }
     std::string tipoUsuario = usuario->getTipo();
@@ -161,14 +161,14 @@ bool PrestamoFactory::validarReglasPrestamo(const std::string& idUsuario,
         if (tipoRecurso == "LibroFisico") {
             int prestamosLibro = contarPrestamosActivosPorUsuarioYTipo(idUsuario, {"LibroFisico"}, rutaPrestamos, rutaRecursos);
             if (prestamosLibro >= 3) {
-                std::cout << "❌ Límite de libros físicos alcanzado (3).\n";
+                std::cout << " Limite de libros fisicos alcanzado (3).\n";
                 return false;
             }
         }
         if (tipoRecurso == "Ebook" || tipoRecurso == "Articulo") {
             int digitales = contarPrestamosActivosPorUsuarioYTipo(idUsuario, {"Ebook", "Articulo"}, rutaPrestamos, rutaRecursos);
             if (digitales >= 5) {
-                std::cout << "❌ Límite de recursos digitales alcanzado (5 entre Ebook y Artículo).\n";
+                std::cout << " Limite de recursos digitales alcanzado (5 entre Ebook y Articulo).\n";
                 return false;
             }
         }
@@ -202,14 +202,14 @@ bool PrestamoFactory::recursoActualmentePrestado(const std::string& idRecurso, c
 void PrestamoFactory::registrarReserva(const std::string& idUsuario, const std::string& idRecurso) {
     std::ofstream archivo("data/reservas.txt", std::ios::app);
     if (!archivo.is_open()) {
-        std::cerr << "⚠️ No se pudo abrir el archivo de reservas.\n";
+        std::cerr << " No se pudo abrir el archivo de reservas.\n";
         return;
     }
 
     archivo << idUsuario << "|" << idRecurso << "\n";
     archivo.close();
 
-    std::cout << "📌 El recurso ya está prestado. Se ha registrado una reserva para ti.\n";
+    std::cout << " El recurso ya esta prestado. Se ha registrado una reserva para ti.\n";
 }
 
 void PrestamoFactory::mostrarReservasDelUsuario(const std::string& idUsuario) {
@@ -217,7 +217,7 @@ void PrestamoFactory::mostrarReservasDelUsuario(const std::string& idUsuario) {
     std::string linea;
     bool hayReservas = false;
 
-    std::cout << "\n📌 Reservas pendientes para el usuario " << idUsuario << ":\n";
+    std::cout << "\n Reservas pendientes para el usuario " << idUsuario << ":\n";
 
     while (std::getline(archivo, linea)) {
         std::stringstream ss(linea);
@@ -232,7 +232,7 @@ void PrestamoFactory::mostrarReservasDelUsuario(const std::string& idUsuario) {
     }
 
     if (!hayReservas) {
-        std::cout << "⚠️ No tienes reservas pendientes.\n";
+        std::cout << " No tienes reservas pendientes.\n";
     }
 
     archivo.close();
@@ -266,9 +266,9 @@ void PrestamoFactory::cancelarReserva(const std::string& idUsuario, const std::s
     std::rename("data/reservas_temp.txt", "data/reservas.txt");
 
     if (encontrada) {
-        std::cout << "✅ Reserva cancelada correctamente.\n";
+        std::cout << " Reserva cancelada correctamente.\n";
     } else {
-        std::cout << "⚠️ No se encontró esa reserva.\n";
+        std::cout << " No se encuentra esa reserva.\n";
     }
 }
 

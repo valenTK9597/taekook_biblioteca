@@ -18,22 +18,20 @@
 #include <iomanip> 
 
 
-
-
 namespace fs = std::filesystem;
 
 ModuloRecomendaciones::ModuloRecomendaciones(const std::string& recursos, const std::string& prestamos, const std::string& usuarios)
     : rutaRecursos(recursos), rutaPrestamos(prestamos), rutaUsuarios(usuarios), buscador(recursos) {}
 
 
-// 🧾 Leer solo IDs del historial
+//  Leer solo IDs del historial
 std::vector<std::string> ModuloRecomendaciones::leerIdsHistorial(const std::string& usuarioId) {
     std::vector<std::string> ids;
     std::string ruta = "data/historiales/historial_" + usuarioId + ".txt";  // CORREGIDO
     std::ifstream archivo(ruta);
 
     if (!archivo.is_open()) {
-        std::cerr << " ⚠️ No se encontró historial para el usuario: " << usuarioId << "\n";
+        std::cerr << "  No se encuentra historial para el usuario: " << usuarioId << "\n";
         return ids;  // Retorna lista vacía pero NO crea ningún archivo
     }
 
@@ -57,7 +55,7 @@ std::map<std::string, int> ModuloRecomendaciones::contarTiposDesdeHistorial(cons
     std::ifstream archivo(ruta);
 
     if (!archivo.is_open()) {
-        std::cerr << "⚠️ No se pudo abrir el historial del usuario: " << usuarioId << "\n";
+        std::cerr << " No se pudo abrir el historial del usuario: " << usuarioId << "\n";
         return conteo;
     }
 
@@ -86,7 +84,7 @@ std::string ModuloRecomendaciones::obtenerIdDesdeNombre(const std::string& nombr
     std::string linea;
 
     if (!archivo.is_open()) {
-        std::cerr << "❌ No se pudo abrir el archivo de usuarios.\n";
+        std::cerr << " No se pudo abrir el archivo de usuarios.\n";
         return "";
     }
 
@@ -145,7 +143,7 @@ void ModuloRecomendaciones::recomendarPorTipoUsuario(const std::string& nombreUs
     }
 
     std::vector<Recurso*> recomendados = contexto.recomendar(recursos);
-    std::cout << "\n📚 Recursos recomendados para " << tipoUsuario << ":\n";
+    std::cout << "\n Recursos recomendados para " << tipoUsuario << ":\n";
     for (Recurso* r : recomendados) {
         std::cout << "- [" << r->getId() << "] " << r->getTitulo() << " (" << r->getTipo() << ")\n";
     }
@@ -153,7 +151,7 @@ void ModuloRecomendaciones::recomendarPorTipoUsuario(const std::string& nombreUs
     for (Recurso* r : recursos) delete r;
 }
 
-// 📂 Recomendación por tipo específico
+//  Recomendación por tipo específico
 void ModuloRecomendaciones::recomendarPorTipoRecurso(const std::string& tipo) {
     std::vector<Recurso*> recursos = RecursoFactory::leerRecursosDesdeArchivo("data/recursos.txt");
 
@@ -161,7 +159,7 @@ void ModuloRecomendaciones::recomendarPorTipoRecurso(const std::string& tipo) {
     contexto.setEstrategia(new RecomendacionPorTipo(tipo));
 
     std::vector<Recurso*> recomendados = contexto.recomendar(recursos);
-    std::cout << "\n📂 Recursos del tipo '" << tipo << "':\n";
+    std::cout << "\n Recursos del tipo '" << tipo << "':\n";
     for (Recurso* r : recomendados) {
         std::cout << "- [" << r->getId() << "] " << r->getTitulo() << " (" << r->getTipo() << ")\n";
     }
@@ -173,7 +171,7 @@ void ModuloRecomendaciones::recomendarPorPreferenciaDetectada(const std::string&
     std::string idUsuario = obtenerIdDesdeNombre(nombreUsuario);
 
     if (idUsuario.empty()) {
-        std::cerr << "❌ No se encontró el ID para el usuario: " << nombreUsuario << "\n";
+        std::cerr << " No se encuentra el ID para el usuario: " << nombreUsuario << "\n";
         return;
     }
 
@@ -183,14 +181,14 @@ void ModuloRecomendaciones::recomendarPorPreferenciaDetectada(const std::string&
     std::cerr << "[DEBUG] Ruta generada: '" << ruta << "'\n";
 
     if (!std::filesystem::exists(ruta)) {
-        std::cerr << "❌ Archivo NO existe según std::filesystem::exists().\n";
+        std::cerr << " Archivo NO existente.\n";
         return;
     }
 
     std::map<std::string, int> conteo = contarTiposDesdeHistorial(idUsuario);
 
     if (conteo.empty()) {
-        std::cout << "⚠️ No hay historial para detectar preferencias.\n";
+        std::cout << " No hay historial para detectar preferencias.\n";
         return;
     }
 
@@ -205,10 +203,10 @@ void ModuloRecomendaciones::recomendarPorPreferenciaDetectada(const std::string&
     }
 
     if (!preferido.empty()) {
-        std::cout << "📌 Tipo de recurso preferido detectado: " << preferido << "\n";
+        std::cout << " Tipo de recurso preferido detectado: " << preferido << "\n";
         recomendarPorTipoRecurso(preferido);
     } else {
-        std::cout << "❌ No se detectaron preferencias claras.\n";
+        std::cout << " No se detectaron preferencias claras.\n";
     }
 }
 
@@ -217,12 +215,12 @@ void ModuloRecomendaciones::mostrarSubmenuRecomendaciones(const std::string& nom
     int opcion;
 
     do {
-        std::cout << "\n📌 SUBMENÚ DE RECOMENDACIONES 📌\n";
-        std::cout << "1. Recomendaciones según tu tipo de usuario (" << tipoUsuario << ")\n";
-        std::cout << "2. Recomendaciones por tipo específico (libro, revista, etc.)\n";
-        std::cout << "3. Recomendaciones según tus preferencias detectadas\n";
-        std::cout << "4. Volver al menú anterior\n";
-        std::cout << "Seleccione una opción: ";
+        std::cout << "\n SUBMENU DE RECOMENDACIONES \n";
+        std::cout << "1. Recomendaciones segun tu tipo de usuario (" << tipoUsuario << ")\n";
+        std::cout << "2. Recomendaciones por tipo especifico (libro, revista, etc.)\n";
+        std::cout << "3. Recomendaciones segun tus preferencias detectadas\n";
+        std::cout << "4. Volver al menu anterior\n";
+        std::cout << "Seleccione una opcion: ";
         std::cin >> opcion;
         std::cin.ignore();
 
@@ -242,11 +240,11 @@ void ModuloRecomendaciones::mostrarSubmenuRecomendaciones(const std::string& nom
                 recomendarPorPreferenciaDetectada(nombreUsuario);
                 break;
             case 4:
-                std::cout << "Regresando a menú principal.\n";
+                std::cout << "Regresando a menu principal.\n";
                 opcion = false; // Para salir del bucle
                 break;
             default:
-                std::cout << " Opción inválida. Intente nuevamente.\n";
+                std::cout << " Opcion invalida. Intente de nuevo.\n";
                 break;
         }
     } while (opcion != 0);

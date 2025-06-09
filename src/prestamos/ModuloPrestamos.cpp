@@ -46,7 +46,7 @@ void ModuloPrestamos::guardarHistorial(const std::string& nombreUsuario, const s
     Recurso* recurso = gestorRecursos.obtenerRecursoPorId(idRecurso);
 
     if (!recurso) {
-        std::cout << "❌ No se pudo encontrar el recurso para guardar en el historial.\n";
+        std::cout << " No se pudo encontrar el recurso para guardar en el historial.\n";
         return;
     }
 
@@ -56,10 +56,10 @@ void ModuloPrestamos::guardarHistorial(const std::string& nombreUsuario, const s
 
     std::ofstream archivo(rutaArchivo, std::ios::app);
     if (archivo.is_open()) {
-        archivo << "✅ Préstamo realizado: [" << idRecurso << "] " << titulo << " | Tipo: " << tipo << "\n";
+        archivo << " Prestamo realizado: [" << idRecurso << "] " << titulo << " | Tipo: " << tipo << "\n";
         archivo.close();
     } else {
-        std::cout << "❌ No se pudo guardar el historial.\n";
+        std::cout << " No se pudo guardar el historial.\n";
     }
 }
 
@@ -116,7 +116,7 @@ void ModuloPrestamos::registrarPrestamo() {
     PrestamoFactory::guardarPrestamoEnArchivo(nuevo, rutaArchivoPrestamos);
     nuevo->registrar();
 
-    // 🔁 Actualizar estado de disponibilidad en recurso
+    // Actualizar estado de disponibilidad en recurso
     std::vector<Recurso*> recursos = RecursoFactory::cargarRecursosDesdeArchivo(rutaArchivoRecursos);
     std::ofstream archivoTemp("data/temp_recursos.txt");
 
@@ -140,10 +140,10 @@ void ModuloPrestamos::registrarPrestamo() {
 
 }
 
-// ✅ Devolución por ID
+//  Devolución por ID
 void ModuloPrestamos::devolverPrestamoPorId(ModuloNotificaciones& moduloNotificaciones){
     std::string id;
-    std::cout << "\n Devolver préstamo\nIngrese el ID del préstamo: ";
+    std::cout << "\n Devolver prestamo\nIngrese el ID del prestamo: ";
     std::cin >> id;
 
     std::ifstream entrada(rutaArchivoPrestamos);
@@ -174,20 +174,20 @@ void ModuloPrestamos::devolverPrestamoPorId(ModuloNotificaciones& moduloNotifica
                 if (recurso) {
                     int diasRetraso = calcularDiasRetraso(fFin, fechaActual);
                     double multa = recurso->calcularMulta(diasRetraso);
-                    std::cout << " El préstamo fue devuelto con retraso.\n";
-                    std::cout << " Multa por " << diasRetraso << " días de retraso: $" << multa << "\n";
+                    std::cout << " El prestamo fue devuelto con retraso.\n";
+                    std::cout << " Multa por " << diasRetraso << " dias de retraso: $" << multa << "\n";
 
-                    // 🔔 Notificación de préstamo vencido
+                    //  Notificación de préstamo vencido
                     moduloNotificaciones.notificarDevolucionConRetraso(uid);
 
                     delete recurso;
                 } else {
-                    std::cout << "⚠️ No se pudo calcular la multa (recurso no encontrado).\n";
+                    std::cout << " No se pudo calcular la multa (recurso no encontrado).\n";
                 }
 
             } else {
                 estado = "Devuelto";
-                std::cout << " ✅ Préstamo devuelto a tiempo.\n";
+                std::cout << " Prestamo devuelto a tiempo.\n";
                 moduloNotificaciones.notificarDevolucionExitosa(uid);
 
             }
@@ -211,7 +211,7 @@ void ModuloPrestamos::devolverPrestamoPorId(ModuloNotificaciones& moduloNotifica
     std::rename("data/temp_prestamos.txt", rutaArchivoPrestamos.c_str());
 
 
-    // 🔁 Marcar recurso como disponible nuevamente
+    //  Marcar recurso como disponible nuevamente
     std::vector<Recurso*> recursos = RecursoFactory::cargarRecursosDesdeArchivo(rutaArchivoRecursos);
     std::ofstream archivoTemp("data/temp_recursos.txt");
 
@@ -229,7 +229,7 @@ void ModuloPrestamos::devolverPrestamoPorId(ModuloNotificaciones& moduloNotifica
     std::remove(rutaArchivoRecursos.c_str());
     std::rename("data/temp_recursos.txt", rutaArchivoRecursos.c_str());
 
-    // 🔔 Notificar a quienes tenían reserva
+    //  Notificar a quienes tenían reserva
     std::ifstream archivoReservas("data/reservas.txt");
     std::vector<std::string> usuariosReservaron;
     std::string lineaReserva;
@@ -333,7 +333,7 @@ void ModuloPrestamos::gestionarPrestamosAdministrador() {
             case 7: mostrarReporteEnConsola(); break;
             case 8: exportarReporteAArchivo(); break;
             case 9: continuar = false; break;
-            default: std::cout << "❌ Opción invalida.\n";
+            default: std::cout << " Opcion invalida.\n";
         }
 
         for (Prestamo* p : prestamos) delete p;
@@ -385,7 +385,7 @@ void ModuloPrestamos::forzarDevolucionPorId(ModuloNotificaciones& moduloNotifica
                 }
             } else {
                 estado = "Devuelto";
-                std::cout << " Prestamo aún en fecha, marcado como devuelto.\n";
+                std::cout << " Prestamo aun en fecha, marcado como devuelto.\n";
             }
 
             modificado = true;
@@ -409,7 +409,7 @@ void ModuloPrestamos::forzarDevolucionPorId(ModuloNotificaciones& moduloNotifica
             moduloNotificaciones.enviarAdvertenciasGravesPorVencimiento(uidPrestamo, ridPrestado);
         }
 
-        // 🔁 Actualizar disponibilidad en recursos.txt
+        //  Actualizar disponibilidad en recursos.txt
         std::vector<Recurso*> recursos = RecursoFactory::cargarRecursosDesdeArchivo(rutaArchivoRecursos);
         std::ofstream archivoTemp("data/temp_recursos.txt");
 
@@ -471,7 +471,7 @@ void ModuloPrestamos::cancelarPrestamoPorId() {
 // Mostrar reporte por consola
 void ModuloPrestamos::mostrarReporteEnConsola() {
     std::vector<Prestamo*> prestamos = PrestamoFactory::cargarPrestamosDesdeArchivo(rutaArchivoPrestamos);
-    std::cout << "\n📋 REPORTE GENERAL DE PRESTAMOS:\n";
+    std::cout << "\n REPORTE GENERAL DE PRESTAMOS:\n";
     for (Prestamo* p : prestamos) {
         p->mostrarDetalle();
     }

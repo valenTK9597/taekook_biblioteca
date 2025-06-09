@@ -16,7 +16,7 @@
 ModuloBusqueda::ModuloBusqueda(const std::string& rutaRecursos)
     : rutaArchivoRecursos(rutaRecursos) {}
 
-// 🔁 Cargar recursos (todos o solo disponibles según parámetro)
+//  Cargar recursos (todos o solo disponibles según parámetro)
 std::vector<Recurso*> ModuloBusqueda::cargarRecursos(bool incluirNoDisponibles) const {
     std::vector<Recurso*> todos = RecursoFactory::cargarRecursosDesdeArchivo(rutaArchivoRecursos);
     if (incluirNoDisponibles) return todos;
@@ -32,7 +32,7 @@ std::vector<Recurso*> ModuloBusqueda::cargarRecursos(bool incluirNoDisponibles) 
     return disponibles;
 }
 
-// 📦 Método genérico de impresión
+//  Método genérico de impresión
 void imprimirResultados(const std::vector<Recurso*>& resultados, bool mostrarEstado) {
     if (resultados.empty()) {
         std::cout << " No se encontraron recursos.\n";
@@ -41,7 +41,7 @@ void imprimirResultados(const std::vector<Recurso*>& resultados, bool mostrarEst
         for (Recurso* r : resultados) {
             r->mostrarInformacion();
             if (mostrarEstado) {
-                std::cout << " 📌 Estado: " << (r->estaDisponible() ? "Disponible\n" : "No disponible\n");
+                std::cout << "  Estado: " << (r->estaDisponible() ? "Disponible\n" : "No disponible\n");
             }
         }
     }
@@ -49,10 +49,10 @@ void imprimirResultados(const std::vector<Recurso*>& resultados, bool mostrarEst
     for (Recurso* r : resultados) delete r;
 }
 
-// 🔍 Buscar por título
+// Buscar por título
 void ModuloBusqueda::buscarPorTitulo(bool incluirNoDisponibles) const {
     std::string criterio;
-    std::cout << "\n Ingrese parte o todo el título: ";
+    std::cout << "\n Ingrese parte o todo el titulo: ";
     std::cin.ignore();
     std::getline(std::cin, criterio);
 
@@ -63,7 +63,7 @@ void ModuloBusqueda::buscarPorTitulo(bool incluirNoDisponibles) const {
     imprimirResultados(resultados, incluirNoDisponibles);
 }
 
-// 🔍 Buscar por autor
+// Buscar por autor
 void ModuloBusqueda::buscarPorAutor(bool incluirNoDisponibles) const {
     std::string criterio;
     std::cout << "\n Ingrese parte o todo el nombre del autor: ";
